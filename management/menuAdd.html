@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+    <script type='text/javascript'>
+        function add_item() {
+            var div = document.createElement('div');
+            div.innerHTML = document.getElementById('pre_set').innerHTML;
+            document.getElementById('option').appendChild(div);
+        }
+
+        function remove_item(obj) {
+            document.getElementById('option').removeChild(obj.parentNode);
+        }
+
+    </script>
+    <head>
+        <meta charset="UTF-8">
+        <title>Shuttles Menu Management Page</title> 
+    </head>
+    <body>
+        <h3>Menu List</h3>
+        <br>
+        <p>Shuttles 메뉴추가 페이지입니다.</p>
+        <br>
+        <form method="post" enctype="multipart/form-data" action="/menu/upload">
+            <table>
+                <tr>
+                    <td><label>메뉴 이름</label></td>
+                    <td colspan="3"><input type="text" name="coffee_name"></td>
+                </tr>
+                <tr>
+                    <td><label>사이즈</label></td>
+                    <td><input type='radio' name='coffee_size' value='Regular' checked>Regular</td>
+                    <td><input type='radio' name='coffee_size' value='tall'>tall</td>
+                    <td><input type='radio' name='coffee_size' value='grande'>grande</td>
+                    <td><label>가격</label></td>
+                    <td><input type="number" name="coffee_price"></td>
+                </tr>
+                <tr>
+                    <td><label>구분</label></td>
+                    <td><input type='radio' name='coffee_kind' value='basic' checked>basic</td>
+                    <td><input type='radio' name='coffee_kind' value='latte'>latte</td>
+                    <td><input type='radio' name='coffee_kind' value='shake'>shake</td>
+                </tr>
+                <tr>
+                    <td><label>옵션</label></td>
+                    <td><input type='button' name'option_add' value='추가' onclick="add_item()"></td>
+                </tr>         
+            </table>
+            <div id='option'></div>
+            <div id='pre_set' style='display:none'>
+                <label>이름</label>&nbsp;<input type='text' name='option_name'>
+                &nbsp;&nbsp;<label>가격</label>&nbsp;<input type='number' name='option_price'>
+                &nbsp;&nbsp;<input type='button' value='삭제' onclick="remove_item(this)">
+            </div>  
+            <br>     
+            <table>
+                <tr>
+                    <td><label>메뉴 설명</label></td>
+                    <td><textarea name="coffee_description" cols='40' rows='10'></textarea>
+                </tr>
+            </table>
+            <table>
+                <tr>
+                    <td><label>사진</label></td>
+                    <td><input type="file" name="userfile"></td>
+                </tr>
+            </table>
+            <br>
+            <input type="submit" value="메뉴 추가" name="submit">
+            <input type="button" value="뒤로가기" onclick='history.back()'>
+        </form>
+        <br><br>
+    </body>
+</html>
