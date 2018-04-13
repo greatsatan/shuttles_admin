@@ -1,24 +1,23 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <link rel="stylesheet" href="login.css">
         <meta charset="UTF-8">
         <title>Shuttles Login Page</title> 
     </head>
     <body>
-        <h1>Shuttles Login</h1>
-        <br>
-        <form method="post" action="/">
-            <table>
-                <tr>
-                    <td><label>아이디</label></td>
-                    <td><input type="text" name="id"></td>
-                    <td rowspan="2"><input type="submit" value="로그인" name="login" style="height:50px"></td>
-                </tr>
-                <tr>
-                    <td><label>비밀번호</label></td>
-                    <td><input type="password" name="password"></td>
-                </tr>
-            </table>            
-        </form>
+        <form class="form-1" method="post" action="/">
+            <p class="field">
+                <input type="text" name="login" placeholder="Username or email">
+                <i class=""></i>
+            </p>
+                <p class="field">
+                    <input type="password" name="password" placeholder="Password">
+                    <i class=""></i>
+            </p>        
+            <p class="submit">
+                <button type="submit" name="submit"><i class=""></i></button>
+            </p>
+        </form>        
     </body>
 </html>

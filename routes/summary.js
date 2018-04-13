@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var connection = require('../db/db_con');
+var connection;
 
 router.get('/', function(req, res){ 
     if(req.session.user) {

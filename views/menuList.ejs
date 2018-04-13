@@ -56,28 +56,30 @@
         <div>
             <form method="get" action="/menu/update_page">
                 <table>
-                    <% for(var i=0; i<results.length; i++) {
-                        var coffee_id = results[i].coffee_id;
-                        var c_name = results[i].c_name;
-                        var picture_url = results[i].picture_url;
-                        var description = results[i].description;
-                        var cz_name = results[i].cz_name;
-                        var price = results[i].price;
-                        var cs_name = results[i].cs_name;
-                        var co_name = results[i].co_name; 
-                        var o_price = results[i].o_price; 
-                        %>
-                        <tr>
-                            <td><input type='radio' name='coffee_id' value=<%= coffee_id %>></td>
-                            <td><img class="thumbnail round" onError="javascript:noImageHeaderError(this)" src=<%= picture_url %>></td> 
-                            <td>커피 이름: <%= c_name %></td> 
-                            <td>설명: <%= description %></td> 
-                            <td>사이즈: <%= cz_name %></td> 
-                            <td>가격: <%= price %></td> 
-                            <td>구분: <%= cs_name %></td>
-                            <td>옵션: <%= co_name %></td> 
-                            <td>옵션가격: <%= o_price %></td>
-                        </tr>
+                    <% 
+                        
+                        for(var i=0; i<results.length; i++) {
+                            var coffee_id = results[i].coffee_id;
+                            var c_name = results[i].c_name;
+                            var picture_url = results[i].picture_url;
+                            var description = results[i].description;
+                            var cz_name = results[i].cz_name;
+                            var price = results[i].price;
+                            var cs_name = results[i].cs_name;
+                            var co_name = results[i].co_name; 
+                            var o_price = results[i].o_price; 
+                            %>
+                            <tr>
+                                <td><input type='radio' name='coffee_id' value=<%= coffee_id %>></td>
+                                <td><img class="thumbnail round" onError="javascript:noImageHeaderError(this)" src=<%= picture_url %>></td> 
+                                <td>커피 이름: <%= c_name %></td> 
+                                <td>설명: <%= description %></td> 
+                                <td>사이즈: <%= cz_name %></td> 
+                                <td>가격: <%= price %></td> 
+                                <td>구분: <%= cs_name %></td>
+                                <td>옵션: <%= co_name %></td> 
+                                <td>옵션가격: <%= o_price %></td>
+                            </tr>
                     <%}%>
                     <input type="submit" value="메뉴 수정" name="coffeeUpdate">
                 </table>

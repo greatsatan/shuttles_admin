@@ -2,7 +2,11 @@ var mysql = require('mysql');
 var jimp = require('jimp');
 var AWS = require('aws-sdk');
 var fs = require('fs');
-AWS.config.region = 'ap-northeast-2';
+AWS.config.update({
+    accessKeyId: "AKIAIEA5ZWNRSQHU55UA",
+    secretAccessKey: "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",
+    "region": "ap-northeast-2"
+})
 var s3 = new AWS.S3();
 var param = {
     'Bucket':'shuttles/coffee',
@@ -17,8 +21,8 @@ var pool = mysql.createPool({
     connectionLimit: 10,
     host: 'localhost',
     user: 'root',
-    password: 'wjddn332!',
-    database: 'Shuttels'
+    password: '1234',
+    database: 'shuttlesdb'
 });
 
 exports.dbConnect = function(data, callback) {
@@ -33,7 +37,7 @@ exports.dbConnect = function(data, callback) {
 
 var coffee_list = function(req, res) {
     pool.getConnection(function(err, connection) {
-        connection.query("select * from menu_list", function(err, results) {
+        connection.query("select * from coffee_list", function(err, results) {
             res.writeHead('200', {'Content-Type':'text/html;charset=utf8'});
             
             var context = {results: results};
@@ -78,7 +82,7 @@ exports.coffeeUpload = function(req, res) {
         }
 
         pool.getConnection(function(err, connection) {
-            connection.query("insert into coffee values(NULL, ?, ?, ?, 0)", [name, picture_url, description],
+            connection.query("insert into coffee values(NULL, ?, ?, ?, 1)", [name, picture_url, description],
             function(err, result) {
                 var insertId = result.insertId;
                 console.log("id: " + insertId);
@@ -217,7 +221,7 @@ exports.coffeeUpdatePage = function(req, res) {
     console.log(coffee_id);
 
     pool.getConnection(function(err, connection) {
-        connection.query("select * from menu_list where coffee_id = ?", coffee_id, function(err, result) {
+        connection.query("select * from coffee_list where coffee_id = ?", coffee_id, function(err, result) {
             res.writeHead('200', {'Content-Type':'text/html;charset=utf8'});
             var context = {result: result};
             req.app.render('menuUpdate', context, function(err, html) {

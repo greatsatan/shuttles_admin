@@ -37,8 +37,8 @@ app.use('/summary', admin_summary);
 app.use(expressErrorHandler.httpError(404));
 app.use(errorHandler);
 
-http.createServer(app).listen(3325, function() {
-    console.log('Express 서버가 3325번 포트에서 시작');
+http.createServer(app).listen(8765, function() {
+    console.log('Express 서버가 8765번 포트에서 시작');
 });
 
 module.exports = app;

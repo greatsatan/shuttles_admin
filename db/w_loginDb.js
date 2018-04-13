@@ -1,23 +1,11 @@
 var mysql = require('mysql');
-var jimp = require('jimp');
-var AWS = require('aws-sdk');
-var fs = require('fs');
-AWS.config.region = 'ap-northeast-2';
-var s3 = new AWS.S3();
-var param = {
-    'Bucket':'shuttles/coffee',
-    'Key':null,
-    'ACL':'public-read',
-    'Body': null, //fs.createReadStream('gf.png'),
-    'ContentType':'images/png'
-};
 
 var pool = mysql.createPool({
     connectionLimit: 10,
     host: 'localhost',
     user: 'root',
-    password: 'wjddn332!',
-    database: 'Shuttels'
+    password: '1234',
+    database: 'shuttlesdb'
 });
 
 exports.login = function(req, res) {
@@ -45,14 +33,14 @@ exports.login = function(req, res) {
                     }
                 }
     
-                connection.query("select * from menu_list", function(err, results) {
+                connection.query("select * from coffee_list", function(err, results) {
                     res.writeHead('200', {'Content-Type':'text/html;charset=utf8'});
                     
                     var context = {results: results};
-                    req.app.render('../views/menuList', context, function(err, html) {
+                    req.app.render('menuList', context, function(err, html) {
                         if(err) {throw err};
-                        res.end(html);
-                    });
+                         res.end(html);
+                      });
     
                 });
     
