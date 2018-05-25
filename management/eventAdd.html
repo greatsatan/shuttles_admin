@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Shuttles Event Management Page</title> 
+    </head>
+    <body>
+        <h3>Menu List</h3>
+        <br>
+        <p>Shuttles 공지사항 추가 페이지입니다.</p>
+        <br>
+        <form method="post" action="/event/upload">
+            <table>
+                <tr>
+                    <td><label>제목</label></td>
+                    <td colspan="3"><input type="text" name="subject"></td>
+                </tr>
+            <table>
+                <tr>
+                    <td><label>내용</label></td>
+                    <td><textarea name="content" cols='40' rows='10'></textarea>
+                </tr>
+            </table>
+            <br>
+            <input type="submit" value="메뉴 추가" name="submit">
+            <input type="button" value="뒤로가기" onclick='history.back()'>
+        </form>
+        <br><br>
+    </body>
+</html>

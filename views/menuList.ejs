@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <script src="/js/jquery-3.3.1.min.js"></script>
+        <script src="/js/bootstrap.min.js"></script>
+        <link type="text/css" rel="stylesheet" href="css/bootstrap.css">
+        <script language='javascript'>
+            var clickedId = -1;
+
+            function noImageHeaderError( obj ){
+                if( obj !=null){
+                    obj.src = "no_image.jpg"; // 변경하고자하는 이미지를 넣는다.
+                }
+            }
+
+            function SelectRow(obj) {
+                var table = document.getElementById("list-table");
+                var tr = table.getElementsByTagName("tr");
+
+                clickedId = obj.children[0].innerText;
+                console.log(clickedId);
+                
+                for(var i=0; i<tr.length; i++){
+                   tr[i].style.backgroundColor = "white";
+                }
+                obj.style.backgroundColor= "#DCD8D8";
+            }
+
+            function onMouseOver(obj) {
+                if(obj.children[0].innerText != clickedId) {
+                    obj.style.backgroundColor = "#E9E7E7";
+                }
+            }
+
+            function onMouseOut(obj) {
+                if(obj.children[0].innerText != clickedId) {
+                    obj.style.backgroundColor = "white";    
+                }
+            }
+
+            function menuUpdate(del) {
+                if(clickedId > 0) {
+                    var actionUrl = "";
+                    var res = false;
+                    if(del == 1) {
+                        actionUrl = "/menu/delete";
+                        var res = confirm("선택하신 " + clickedName + "메뉴를 삭제하시겠습니까?");
+                    }
+                    else {
+                        actionUrl = "/menu/update_page";
+                        res = true;
+                    }
+                    if(res) {
+                        var form = document.createElement("form");
+                        form.setAttribute("charset", "UTF-8");
+                        form.setAttribute("method", "Post"); // Get 또는 Post 입력
+                        form.setAttribute("action", actionUrl);
+
+                        var field = document.createElement("input");
+                        field.setAttribute("type", "hidden");
+                        field.setAttribute("name", "coffee_id");
+                        field.setAttribute("value", clickedId);
+                        form.appendChild(field);
+
+                        document.body.appendChild(form);
+
+                        form.submit();
+                    }
+                }
+                else {
+                    alert("수정 혹은 삭제하실 메뉴를 선택해 주세요.");
+                }
+            }
+
+        </script>
+        <style>
+                .my_thumbnail{
+                    background-color:gray;
+                    margin:10px;
+                    width:60px;
+                    height:60px;
+                    background-size: cover;
+                    background-repeat: no-repeat;
+                    background-position: center center;
+                }
+                .my_thumbnail.round{
+                    border-radius: 10%;
+                }
+                .my_thumbnail.circle{
+                    border-radius: 100%;
+                }
+        </style>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Shuttles Menu Management Page</title> 
+    </head>
+    <body>
+        <div class='container'>
+        <h3>Menu List</h3>
+        <br>
+        <p>Shuttles 메뉴리스트 페이지입니다.</p>
+        <br>
+        <a href="/menu/add" class="btn btn-default pull-left">메뉴 추가</a>
+        <a href="/summary" class="btn btn-default pull-right">통계</a>
+        <a href="/event/list" class="btn btn-default pull-right">공지사항 관리</a>
+        <br><br><br>
+            <div class="col-lg-12" id="select_prod" ></div> 
+            <input class="btn btn-default pull-left" type="submit" value="수정" name="coffeeUpdate" onclick="menuUpdate(0)">
+            <input class="btn btn-default pull-left" type="submit" value="삭제" name="coffeeDelete" onclick="menuUpdate(1)">
+            <table id="list-table" class="table">
+                <thead>
+                    <tr>
+                        <th>번호</th>
+                        <th>사진</th>
+                        <th>이름</th>
+                        <th>설명</th>
+                        <th>사이즈</th>
+                        <th>가격</th>
+                        <th>구분</th>
+                        <th>옵션</th>
+                        <th>옵션가격</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <%
+		    if(results) { 
+                    for(var i=0; i<results.length; i++) {
+                        var coffee_id = results[i].coffee_id;
+                        var c_name = results[i].c_name;
+                        var picture_url = results[i].picture_url;
+                        var description = results[i].description;
+                        var cz_name = results[i].cz_name;
+                        var price = results[i].price;
+                        var cs_name = results[i].cs_name;
+                        var co_name = results[i].co_name; 
+                        var o_price = results[i].o_price; 
+                        %>
+                        <tr id="menu_list" onmouseover="javascript:onMouseOver(this)" onmouseout="javascript:onMouseOut(this)" onclick="javascript:SelectRow(this)">
+                            <td><input type='hidden' name='coffee_id' value=<%= coffee_id %>><%=coffee_id%></td>
+                            <td><img class="my_thumbnail round" onError="javascript:noImageHeaderError(this)" src=<%= picture_url %>></td>
+                            <td><%= c_name %></td> 
+                            <td><%= description %></td> 
+                            <td><%= cz_name %></td> 
+                            <td><%= price %></td> 
+                            <td><%= cs_name %></td>
+                            <td><%= co_name %></td> 
+                            <td><%= o_price %></td>
+                        </tr>
+                <%}}%>
+                </tbody>
+            </table>
+        <br>
+        <a href="/logout" class="btn btn-default pull-left">로그아웃</a>
+        </div>
+        <script>
+            // 테이블의 Row 클릭시 값 가져오기
+            /*$("#list-table tr").click(function(){     
+                var str = ""
+                var tdArr = new Array();    // 배열 선언
+                
+                // 현재 클릭된 Row(<tr>)
+                var tr = $(this);
+                var td = tr.children();
+                
+                // tr.text()는 클릭된 Row 즉 tr에 있는 모든 값을 가져온다.
+                //console.log("클릭한 Row의 모든 데이터 : "+tr.text());
+                
+                // 반복문을 이용해서 배열에 값을 담아 사용할 수 도 있다.
+                td.each(function(i){
+                    tdArr.push(td.eq(i).text());
+                });
+                
+                console.log("배열에 담긴 값 : "+ tdArr);
+                console.log(tr);
+                
+                // td.eq(index)를 통해 값을 가져올 수도 있다.
+                
+                clickedId = td.eq(0).text();
+                clickedName = td.eq(2).text();
+                
+                //str += "선택한 메뉴 이름 : <font color='blue'>" + clickedName + "</font>";            
+                //$("#select_prod").html(str);
+                
+            }); */       
+        </script>  
+    </body>
+</html>
