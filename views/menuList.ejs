@@ -122,7 +122,8 @@
                     </tr>
                 </thead>
                 <tbody>
-                <% 
+                <%
+		    if(results) { 
                     for(var i=0; i<results.length; i++) {
                         var coffee_id = results[i].coffee_id;
                         var c_name = results[i].c_name;
@@ -145,7 +146,7 @@
                             <td><%= co_name %></td> 
                             <td><%= o_price %></td>
                         </tr>
-                <%}%>
+                <%}}%>
                 </tbody>
             </table>
         <br>

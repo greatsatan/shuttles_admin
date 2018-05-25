@@ -21,8 +21,8 @@ var pool = mysql.createPool({
     connectionLimit: 10,
     host: 'localhost',
     user: 'root',
-    password: '1234',
-    database: 'shuttlesdb'
+    password: '#@tiqrhf#@',
+    database: 'shuttlesDB'
 });
 
 exports.dbConnect = function(data, callback) {
