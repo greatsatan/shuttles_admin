@@ -13,7 +13,6 @@ router.post('/upload', function(req, res) {
             connection.query("insert into event values(NULL, ?, ?, utc_timestamp(), utc_timestamp(), 0)", [subject, content]);
                       
             console.log('제목: ' + subject + ', 내용: '+ content);
-            
             connection.query("select * from event", function(err, results) {
                 res.writeHead('200', {'Content-Type':'text/html;charset=utf8'});
                 

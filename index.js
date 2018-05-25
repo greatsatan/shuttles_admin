@@ -27,6 +27,23 @@ app.use(expressSession({
     secret : 'my key',
     resave : true,
     saveSUninitialized : true
+}));var expressSession = require('express-session');
+var admin_menu = require('./routes/menu');
+var admin_event = require('./routes/event');
+var admin_login = require('./routes/login');
+var admin_summary = require('./routes/summary');
+
+app.set('views', __dirname+'/views');
+app.set('view engine', 'ejs');
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'uploads')));
+app.use(express.static(path.join(__dirname, 'management')));
+app.use(bodyParser.urlencoded({extended:true}));
+app.use(bodyParser.json());
+app.use(expressSession({
+    secret : 'my key',
+    resave : true,
+    saveSUninitialized : true
 }));
 
 app.use('/', admin_login);

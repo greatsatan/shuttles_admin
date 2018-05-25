@@ -97,7 +97,7 @@ exports.coffeeUpload = function(req, res) {
         var menuImg = './uploads/'+filename;
 
         jimp.read(menuImg).then(function(img) {
-            img.resize(100,100).write(menuImg);
+            img.resize(70,70).write(menuImg);
         }).catch(function(err) {
             console.log(err);
         });
@@ -105,14 +105,14 @@ exports.coffeeUpload = function(req, res) {
         param.Key = filename;
         param.Body = fs.createReadStream(menuImg);
 
-        s3.upload(param, function(err, data) {
+        /*s3.upload(param, function(err, data) {
             if(err) {
                 console.log(err);
             }
             else {
                 console.log(data);
             }
-        });
+        });*/
 
         console.log(picture_url);
 

@@ -1,27 +1,130 @@
 <!DOCTYPE html>
-<html>
-    <script type='text/javascript'>
-        function add_item() {
-            var div = document.createElement('div');
-            div.innerHTML = document.getElementById('pre_set').innerHTML;
-            document.getElementById('option').appendChild(div);
-        }
-
-        function remove_item(obj) {
-            document.getElementById('option').removeChild(obj.parentNode);
-        }
-
-    </script>
+<html lang="en">
     <head>
+        <script type="text/javascript" src="/js/jquery-3.3.1.min.js"></script>
+        <script type="text/javascript" src="/js/bootstrap.min.js"></script>
+        <link type="text/css" rel="stylesheet" href="/css/bootstrap.css">
+        <script language='javascript'>
+            function add_item() {
+                var div = document.createElement('div');
+                div.innerHTML = document.getElementById('pre_set').innerHTML;
+                document.getElementById('option').appendChild(div);
+            }
+    
+            function remove_item(obj) {
+                document.getElementById('option').removeChild(obj.parentNode);
+            }    
+        </script>
         <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Shuttles Menu Management Page</title> 
     </head>
     <body>
-        <h3>Menu List</h3>
-        <br>
-        <p>Shuttles 메뉴수정 페이지입니다.</p>
-        <br>
-        <form method="post" enctype="multipart/form-data" action="/menu/update">
+        <article class="container">
+            <div class="page-header">
+                <div class="col-md-6 col-md-offset-3">
+                    <h3>Shuttles 메뉴 수정 페이지</h3>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-offset-3">
+                <form method="post" enctype="multipart/form-data" action="/menu/update">
+                    <div class="form-group">
+                        <label for="inputName">메뉴 이름</label>
+                        <input type="text" class="form-control" id="inputName" name="coffee_name" placeholder="이름을 입력해 주세요" value=<%= result[0].c_name %>>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputSize">사이즈</label>
+                        <%
+                            if(result[0].cz_name == 'Regular') {
+                        %>   
+                        <input type='radio' name='coffee_size' value='Regular' checked>Regular
+                        <input type='radio' name='coffee_size' value='tall'>tall
+                        <input type='radio' name='coffee_size' value='grande'>grande
+                        <%}
+                            if(result[0].cz_name == 'tall') {
+                        %>
+                        <input type='radio' name='coffee_size' value='Regular'>Regualr
+                        <input type='radio' name='coffee_size' value='tall' checked>tall
+                        <<input type='radio' name='coffee_size' value='grande'>grande
+                        <%}
+                            if(result[0].cz_name == 'grande') {
+                        %>
+                        <input type='radio' name='coffee_size' value='Regular'>Regualr
+                        <input type='radio' name='coffee_size' value='tall'>tall
+                        <input type='radio' name='coffee_size' value='grande' checked>grande
+                        <%}%>
+                        <input type="number" class="form-control" id="inputSize" name="coffee_price" placeholder="가격을 입력해 주세요(숫자만)" value=<%= result[0].price %>>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputKind">구분</label>
+                        <%
+                            if(result[0].cs_name == 'basic') {
+                        %>
+                        <input type='radio' name='coffee_kind' value='basic' checked>basic
+                        <input type='radio' name='coffee_kind' value='latte'>latte
+                        <input type='radio' name='coffee_kind' value='shake'>shake
+                        <%}
+                            if(result[0].cs_name == 'latte') {
+                        %> 
+                        <input type='radio' name='coffee_kind' value='basic'>basic
+                        <input type='radio' name='coffee_kind' value='latte' checked>latte
+                        <input type='radio' name='coffee_kind' value='shake'>shake
+                        <%}
+                            if(result[0].cs_name == 'shake') {
+                        %> 
+                        <input type='radio' name='coffee_kind' value='basic'>basic
+                        <input type='radio' name='coffee_kind' value='latte'>latte
+                        <input type='radio' name='coffee_kind' value='shake' checked>shake
+                        <%}%>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputOption">옵션</label>
+                        <input type='button' name'option_add' id="inputOption" class="btn btn-default pull-center" value='추가' onclick="add_item()">
+                        <div id='option'>
+                            <%
+                                for(var idx=0; idx<result.length; idx++) {
+                            %>
+                            <div>
+                                <label>이름</label>&nbsp;<input type='text' name='option_name' value=<%= result[idx].co_name%>>
+                                &nbsp;&nbsp;<label>가격</label>&nbsp;<input type='number' name='option_price' value=<%= result[idx].o_price%>>
+                                &nbsp;&nbsp;<input type='button' value='삭제' class="btn btn-default pull-center" onclick="remove_item(this)">
+                            </div>
+                            <%}%>
+                        </div>
+                        <div id='pre_set' style='display:none'>
+                            <label>이름</label>&nbsp;<input type='text' name='option_name'>
+                            &nbsp;&nbsp;<label>가격</label>&nbsp;<input type='number' name='option_price'>
+                            &nbsp;&nbsp;<input type='button' class="btn btn-default pull-center" value='삭제' onclick="remove_item(this)">
+                        </div>  
+                    </div>
+                    <div class="form-group">
+                        <label for="inputDesc">메뉴 설명</label>
+                        <textarea class="form-control" name="coffee_description" cols='81' rows='5'><%= result[0].description %></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="inputPicture">사진</label>
+                        <input type="file" name="userfile">
+                    </div>
+                    <div class="form-group text-center">
+                        <button type="submit" id="coffee_submit" class="btn btn-primary">
+                            메뉴수정<i class="fa fa-check spaceLeft"></i>
+                        </button>
+                        <button type="button" class="btn btn-warning" onclick='history.back()'>
+                            뒤로가기<i class="fa fa-times spaceLeft"></i>
+                        </button>
+                    </div>
+                    <input type="hidden" name="coffee_id" value=<%= result[0].coffee_id %>>
+                    <%
+                            for(var idx=0; idx<result.length; idx++) {
+                    %>
+                    <input type="hidden" name="option_id" value=<%= result[idx].option_id %>>
+                    <%}%>
+                </form>    
+            </div>
+        </article>
+
+        <!--<form method="post" enctype="multipart/form-data" action="/menu/update">
             <table>
                 <tr>
                     <td><label>메뉴 이름</label></td>
@@ -116,11 +219,7 @@
             <%}%>
             <input type="submit" value="메뉴 수정" name="submit">
         </form>
-        <form method="post" action="/menu/delete">
-            <input type="submit" value="메뉴 삭제" name="submit">
-            <input type="hidden" name="coffee_id" value=<%= result[0].coffee_id %>>
-        </form>
         <br>
-        <input type="button" value="뒤로가기" onclick='history.back()'>
+        <input type="button" value="뒤로가기" onclick='history.back()'>-->
     </body>
 </html>

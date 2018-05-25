@@ -1,5 +1,8 @@
 <!DOCTYPE html>
 <html>
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="css/bootstrap.css">
     <script type='text/javascript'>
         function add_item() {
             var div = document.createElement('div');
@@ -17,58 +20,60 @@
         <title>Shuttles Menu Management Page</title> 
     </head>
     <body>
-        <h3>Menu List</h3>
-        <br>
-        <p>Shuttles 메뉴추가 페이지입니다.</p>
-        <br>
-        <form method="post" enctype="multipart/form-data" action="/menu/upload">
-            <table>
-                <tr>
-                    <td><label>메뉴 이름</label></td>
-                    <td colspan="3"><input type="text" name="coffee_name"></td>
-                </tr>
-                <tr>
-                    <td><label>사이즈</label></td>
-                    <td><input type='radio' name='coffee_size' value='Regular' checked>Regular</td>
-                    <td><input type='radio' name='coffee_size' value='tall'>tall</td>
-                    <td><input type='radio' name='coffee_size' value='grande'>grande</td>
-                    <td><label>가격</label></td>
-                    <td><input type="number" name="coffee_price"></td>
-                </tr>
-                <tr>
-                    <td><label>구분</label></td>
-                    <td><input type='radio' name='coffee_kind' value='basic' checked>basic</td>
-                    <td><input type='radio' name='coffee_kind' value='latte'>latte</td>
-                    <td><input type='radio' name='coffee_kind' value='shake'>shake</td>
-                </tr>
-                <tr>
-                    <td><label>옵션</label></td>
-                    <td><input type='button' name'option_add' value='추가' onclick="add_item()"></td>
-                </tr>         
-            </table>
-            <div id='option'></div>
-            <div id='pre_set' style='display:none'>
-                <label>이름</label>&nbsp;<input type='text' name='option_name'>
-                &nbsp;&nbsp;<label>가격</label>&nbsp;<input type='number' name='option_price'>
-                &nbsp;&nbsp;<input type='button' value='삭제' onclick="remove_item(this)">
-            </div>  
-            <br>     
-            <table>
-                <tr>
-                    <td><label>메뉴 설명</label></td>
-                    <td><textarea name="coffee_description" cols='40' rows='10'></textarea>
-                </tr>
-            </table>
-            <table>
-                <tr>
-                    <td><label>사진</label></td>
-                    <td><input type="file" name="userfile"></td>
-                </tr>
-            </table>
-            <br>
-            <input type="submit" value="메뉴 추가" name="submit">
-            <input type="button" value="뒤로가기" onclick='history.back()'>
-        </form>
-        <br><br>
+        <article class="container">
+            <div class="page-header">
+                <div class="col-md-6 col-md-offset-3">
+                    <h3>Shuttles 메뉴 추가 페이지</h3>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-offset-3">
+                <form method="post" enctype="multipart/form-data" action="/menu/upload">
+                    <div class="form-group">
+                        <label for="inputName">메뉴 이름</label>
+                        <input type="text" class="form-control" id="inputName" name="coffee_name" placeholder="이름을 입력해 주세요">
+                    </div>
+                    <div class="form-group">
+                        <label for="inputSize">사이즈</label>
+                        <input type='radio' name='coffee_size' value='Regular' checked>Regular
+                        <input type='radio' name='coffee_size' value='tall'>tall
+                        <input type='radio' name='coffee_size' value='grande'>grande
+                        <input type="number" class="form-control" id="inputSize" name="coffee_price" placeholder="가격을 입력해 주세요(숫자만)">
+                    </div>
+                    <div class="form-group">
+                        <label for="inputKind">구분</label>
+                        <input type='radio' name='coffee_kind' value='basic' checked>basic
+                        <input type='radio' name='coffee_kind' value='latte'>latte
+                        <input type='radio' name='coffee_kind' value='shake'>shake
+                    </div>
+                    <div class="form-group">
+                        <label for="inputOption">옵션</label>
+                        <input type='button' name'option_add' id="inputOption" class="btn btn-default pull-center" value='추가' onclick="add_item()">
+                        <div id='option'></div>
+                        <div id='pre_set' style='display:none'>
+                            <label>이름</label>&nbsp;<input type='text' name='option_name'>
+                            &nbsp;&nbsp;<label>가격</label>&nbsp;<input type='number' name='option_price'>
+                            &nbsp;&nbsp;<input type='button' class="btn btn-default pull-center" value='삭제' onclick="remove_item(this)">
+                        </div>  
+                    </div>
+                    <div class="form-group">
+                        <label for="inputDesc">메뉴 설명</label>
+                        <textarea class="form-control" name="coffee_description" cols='81' rows='5'></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="inputPicture">사진</label>
+                        <input type="file" name="userfile">
+                    </div>
+                    <div class="form-group text-center">
+                        <button type="submit" id="coffee_submit" class="btn btn-primary">
+                            메뉴추가<i class="fa fa-check spaceLeft"></i>
+                        </button>
+                        <button type="button" class="btn btn-warning" onclick='history.back()'>
+                            뒤로가기<i class="fa fa-times spaceLeft"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </article>
     </body>
 </html>

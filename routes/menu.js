@@ -22,6 +22,14 @@ router.post('/update', upload.single('userfile'), function(req, res) {
     }
 });
 
+router.post('/update_page' ,function(req, res) {
+    if(req.session.user) {
+        db.coffeeUpdatePage(req, res);
+    } else {
+        res.redirect('/login.html');
+    }
+});
+
 router.post('/delete', function(req, res) {
     if(req.session.user) {
         db.coffeeDelete(req, res);   
@@ -47,15 +55,5 @@ router.get('/add', function(req, res) {
         res.redirect('/login.html');
     }
 });
-
-router.get('/update_page' ,function(req, res) {
-    if(req.session.user) {
-        db.coffeeUpdatePage(req, res);
-    } else {
-        res.redirect('/login.html');
-    }
-});
-
-
 
 module.exports = router;
