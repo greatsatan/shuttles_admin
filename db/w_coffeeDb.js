@@ -3,14 +3,8 @@ var mysql = require('mysql');
 var jimp = require('jimp');
 var AWS = require('aws-sdk');
 var fs = require('fs');
-var IdentityPoolId = 'ap-northeast-2_8LBlXAzEO';
 AWS.config.update({
-    //accessKeyId: "AKIAIEA5ZWNRSQHU55UA",
-    //secretAccessKey: "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",
     "region": "ap-northeast-2",
-    Credentials: new AWS.CognitoIdentityCredentials({
-        IdentityPoolId:  IdentityPoolId
-    })
 })
 var s3 = new AWS.S3();
 var param = {
