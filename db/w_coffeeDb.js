@@ -117,12 +117,12 @@ exports.coffeeUpload = function(req, res) {
 
         console.log('메뉴 이름: ' + name + ', 사이즈: '+ coffee_size + ', 구분: ' + kind + ', 옵션: ' + option_name + ', description: ' + description);
         console.log('현재 파일 정보 : ' + filename + ', ' + mimetype + ', ' + size);
-        
+        coffee_list(req, res);
     }
     else {
         console.log("내용을 전부 입력해주세요.");
     }
-    coffee_list(req, res);
+    
 };
 
 exports.coffeeUpdate = function(req, res) {
@@ -193,13 +193,13 @@ exports.coffeeUpdate = function(req, res) {
                         connection.query('update coffee_option set name=?, price=? where option_id=?', [option_name[idx], option_price[idx], option_id[idx]]);
                     }
                 }
+                coffee_list(req, res);  
             });
         });
     }
     else {
         console.log("내용을 전부 입력해주세요.");
     }
-    coffee_list(req, res);  
 };
 
 
@@ -220,7 +220,7 @@ exports.coffeeUpdatePage = function(req, res) {
     console.log(coffee_id);
 
     pool.getConnection(function(err, connection) {
-        connection.query("select * from coffee_list where coffee_id = ?", coffee_id, function(err, result) {
+        connection.query("select * from coffee_update_list where coffee_id = ?", coffee_id, function(err, result) {
             res.writeHead('200', {'Content-Type':'text/html;charset=utf8'});
             var context = {result: result};
             req.app.render('menuUpdate', context, function(err, html) {

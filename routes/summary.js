@@ -1,18 +1,10 @@
 var express = require('express');
+var db = require('../db/w_summaryDb');
 var router = express.Router();
-var connection;
 
 router.get('/', function(req, res){ 
     if(req.session.user) {
-        connection.query("select * from orders", function(err, result) {
-            res.writeHead('200', {'Content-Type':'text/html;charset=utf8'});
-            var context = {result: result};
-            req.app.render('summary', context, function(err, html) {
-                if(err) {throw err};
-                res.end(html);
-            });
-
-        });
+        db.summary(req, res);
     }
     else {
         res.redirect('/login.html');
