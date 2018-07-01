@@ -2,53 +2,127 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>Shuttles Event Management Page</title> 
+        <script src="/js/jquery-3.3.1.min.js"></script>
+        <script src="/js/bootstrap.min.js"></script>
+        <link type="text/css" rel="stylesheet" href="/css/bootstrap.css">
+        <script language='javascript'>
+            var clickedId = -1;
+            var clickedName = "";
+
+            function noImageHeaderError( obj ){
+                if( obj !=null){
+                    obj.src = "no_image.jpg"; // 변경하고자하는 이미지를 넣는다.
+                }
+            }
+
+            function SelectRow(obj) {
+                var table = document.getElementById("list-table");
+                var tr = table.getElementsByTagName("tr");
+
+                clickedId = obj.children[0].innerText;
+                clickedName = obj.children[2].innerText;
+                console.log(clickedId);
+                
+                for(var i=0; i<tr.length; i++){
+                   tr[i].style.backgroundColor = "white";
+                }
+                obj.style.backgroundColor= "#DCD8D8";
+            }
+
+            function onMouseOver(obj) {
+                if(obj.children[0].innerText != clickedId) {
+                    obj.style.backgroundColor = "#E9E7E7";
+                }
+            }
+
+            function onMouseOut(obj) {
+                if(obj.children[0].innerText != clickedId) {
+                    obj.style.backgroundColor = "white";    
+                }
+            }
+
+            function eventUpdate(del) {
+                if(clickedId > 0) {
+                    var actionUrl = "";
+                    var res = false;
+                    if(del == 1) {
+                        actionUrl = "/event/delete";
+                        var res = confirm("선택하신 " + clickedName + "메뉴를 삭제하시겠습니까?");
+                    }
+                    else {
+                        actionUrl = "/event/update_page";
+                        res = true;
+                    }
+                    if(res) {
+                        var form = document.createElement("form");
+                        form.setAttribute("charset", "UTF-8");
+                        form.setAttribute("method", "Post"); // Get 또는 Post 입력
+                        form.setAttribute("action", actionUrl);
+
+                        var field = document.createElement("input");
+                        field.setAttribute("type", "hidden");
+                        field.setAttribute("name", "event_id");
+                        field.setAttribute("value", clickedId);
+                        form.appendChild(field);
+
+                        document.body.appendChild(form);
+
+                        form.submit();
+                    }
+                }
+                else {
+                    alert("수정 혹은 삭제하실 메뉴를 선택해 주세요.");
+                }
+            }
+
+        </script>
     </head>
     <body>
-        <h3>Menu List</h3>
+        <div class='container'>
+        <h3>Event List</h3>
         <br>
         <p>Shuttles 공지사항 리스트 페이지입니다.</p>
         <br>
-        <table>
-            <tr>
-                <td>
-                    <form method="get" action="/event/add">
-                        <input type="submit" value="공지사항 추가" name="eventAdd">
-                    </form>
-                </td>
-                <td>
-                    <form method="get" action="/menu/list">
-                        <input type="submit" value="메뉴 관리" name="menuList">
-                    </form>
-                </td>
-            </tr>
+        <a href="/event/add" class="btn btn-default pull-left">메뉴 추가</a>
+        <a href="/summary?select_user=all" class="btn btn-default pull-right">통계</a>
+        <a href="/menu/list" class="btn btn-default pull-right">메뉴 관리</a>
+        <br><br><br>
+        <div class="col-lg-12" id="select_prod" ></div>
+        <input class="btn btn-default pull-left" type="submit" value="수정" name="coffeeUpdate" onclick="eventUpdate(0)">
+        <input class="btn btn-default pull-left" type="submit" value="삭제" name="coffeeDelete" onclick="eventUpdate(1)">
+        <table id="list-table" class="table">
+            <thead>
+                <tr>
+                    <th>번호</th>
+                    <th>제목</th>
+                    <th>수정 시간</th>
+                    <th>작성 시간</th>
+                    <th>카운트</th>
+                    <th>내용</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% for(var i=0; i<results.length; i++) {
+                    var event_id = results[i].event_id;
+                    var subject = results[i].subject;
+                    var content = results[i].content;
+                    var update_time = results[i].update_time;
+                    var create_time = results[i].create_time;
+                    var count = results[i].count;
+                    %>
+                    <tr id="event_list" onmouseover="javascript:onMouseOver(this)" onmouseout="javascript:onMouseOut(this)" onclick="javascript:SelectRow(this)">
+                        <td><%= event_id %></td>
+                        <td><%= subject %></td> 
+                        <td><%= update_time %></td> 
+                        <td><%= create_time %></td> 
+                        <td><%= count %></td> 
+                        <td><%= content %></td>
+                    </tr>
+                <%}%>
+            </tbody>
         </table>
-        <br><br>
-        <div>
-            <form method="get" action="/event/update_page">
-                <table>
-                    <% for(var i=0; i<results.length; i++) {
-                        var event_id = results[i].event_id;
-                        var subject = results[i].subject;
-                        var content = results[i].content;
-                        var update_time = results[i].update_time;
-                        var create_time = results[i].create_time;
-                        var count = results[i].count;
-                        %>
-                        <tr>
-                            <td><input type='radio' name='event_id' value=<%= event_id %>></td>
-                            <td>제목: <%= subject %></td> 
-                            <td>최종 업데이트 시간: <%= update_time %></td> 
-                            <td>작성 시간: <%= create_time %></td> 
-                            <td>카운트: <%= count %></td> 
-                            <td>내용: <%= content %></td>
-                        </tr>
-                    <%}%>
-                    <input type="submit" value="공지사항 수정" name="eventUpdate">
-                </table>
-            </form>
-        </div>
         <br>
-        <a href="/logout">로그아웃하기</a>
+        <a href="/logout" class="btn btn-default pull-left">로그아웃</a>
+        </div>
     </body>
 </html>

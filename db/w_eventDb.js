@@ -1,4 +1,5 @@
 var mysql = require('mysql');
+var fs = require('fs');
 var pool = mysql.createPool({
     connectionLimit: 10,
     host: 'localhost',
@@ -27,10 +28,11 @@ exports.eventList = function(req, res) {
 }
 
 exports.eventUpload = function(req, res) {
+    var subject = req.param("event_subject");
+    var content = req.param("event_content");
+    console.log(subject + "/"+ content);
     pool.getConnection(function(err, connection) {
-        var subject = req.param('subject');
-        var content = req.param('content');
-
+    
         if(subject && content) {
        
             connection.query("insert into event values(NULL, ?, ?, utc_timestamp(), utc_timestamp(), 0)", [subject, content]);

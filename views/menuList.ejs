@@ -3,14 +3,14 @@
     <head>
         <script src="/js/jquery-3.3.1.min.js"></script>
         <script src="/js/bootstrap.min.js"></script>
-        <link type="text/css" rel="stylesheet" href="css/bootstrap.css">
+        <link type="text/css" rel="stylesheet" href="/css/bootstrap.css">
         <script language='javascript'>
             var clickedId = -1;
             var clickedName = "";
 
             function noImageHeaderError( obj ){
                 if( obj !=null){
-                    obj.src = "no_image.jpg"; // 변경하고자하는 이미지를 넣는다.
+                    obj.src = "/no_image.jpg"; // 변경하고자하는 이미지를 넣는다.
                 }
             }
 
@@ -103,7 +103,7 @@
         <p>Shuttles 메뉴리스트 페이지입니다.</p>
         <br>
         <a href="/menu/add" class="btn btn-default pull-left">메뉴 추가</a>
-        <a href="/summary" class="btn btn-default pull-right">통계</a>
+        <a href="/summary?select_user=all" class="btn btn-default pull-right">통계</a>
         <a href="/event/list" class="btn btn-default pull-right">공지사항 관리</a>
         <br><br><br>
             <div class="col-lg-12" id="select_prod" ></div> 

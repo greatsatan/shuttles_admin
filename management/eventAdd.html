@@ -1,30 +1,43 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <script src="js/jquery-3.3.1.min.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+        <link type="text/css" rel="stylesheet" href="css/bootstrap.css">
         <meta charset="UTF-8">
         <title>Shuttles Event Management Page</title> 
     </head>
     <body>
-        <h3>Menu List</h3>
-        <br>
-        <p>Shuttles 공지사항 추가 페이지입니다.</p>
-        <br>
-        <form method="post" action="/event/upload">
-            <table>
-                <tr>
-                    <td><label>제목</label></td>
-                    <td colspan="3"><input type="text" name="subject"></td>
-                </tr>
-            <table>
-                <tr>
-                    <td><label>내용</label></td>
-                    <td><textarea name="content" cols='40' rows='10'></textarea>
-                </tr>
-            </table>
-            <br>
-            <input type="submit" value="메뉴 추가" name="submit">
-            <input type="button" value="뒤로가기" onclick='history.back()'>
-        </form>
-        <br><br>
+        <article class="container">
+            <div class="page-header">
+                <div class="col-md-6 col-md-offset-3">
+                    <h3>Shuttles 공지사항 추가 페이지</h3>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-offset-3">
+                <form method="post" enctype="multipart/form-data" action="/event/upload">
+                    <div class="form-group">
+                        <label for="inputSubject">제목</label>
+                        <input type="text" class="form-control" id="event_subject" name="event_subject" placeholder="제목을 입력해 주세요">
+                    </div>
+                    <div class="form-group">
+                        <label for="inputContent">내용</label>
+                        <textarea class="form-control" id="event_subject" name="event_content" cols='40' rows='10'></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputPicture">사진</label>
+                        <input type="file" name="userfile">
+                    </div>
+                    <div class="form-group text-center">
+                        <button type="submit" id="event_submit" class="btn btn-primary">
+                            공지추가<i class="fa fa-check spaceLeft"></i>
+                        </button>
+                        <button type="button" class="btn btn-warning" onclick='history.back()'>
+                            뒤로가기<i class="fa fa-times spaceLeft"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </article>
     </body>
 </html>

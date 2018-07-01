@@ -1,4 +1,3 @@
-
 var mysql = require('mysql');
 var jimp = require('jimp');
 var AWS = require('aws-sdk');
@@ -38,8 +37,16 @@ var coffee_list = function(req, res) {
     pool.getConnection(function(err, connection) {
         connection.query("select * from coffee_list", function(err, results) {
             res.writeHead('200', {'Content-Type':'text/html;charset=utf8'});
-            
+        
             var context = {results: results};
+            var length = results.length;
+            var pathLen = imagePath.length;
+            for(var i=0; i<length; i++) {
+                var strLen = results[i].picture_url.length;
+                results[i].picture_url = "/"+results[i].picture_url.substring(pathLen, strLen);
+            }
+            console.log(context.results);
+            
             req.app.render('menuList', context, function(err, html) {
                 if(err) {throw err};
                 res.end(html);
@@ -94,29 +101,29 @@ exports.coffeeUpload = function(req, res) {
         });
 
         var menuImg = './uploads/'+filename;
-
-        param.Key = filename;
-        param.Body = fs.createReadStream(menuImg);
-
-        jimp.read(menuImg).then(function(img) {
-            img.resize(70,70).write(menuImg);
-                
-            s3.upload(param, function(err, data) {
-                if(err) {
-                    console.log(err);
-                }
-                else {
-                    console.log(data);
-                }
+        jimp.read(menuImg, function(err, img) {
+            img.write(menuImg, function(err) {
+                param.Key = filename;
+                param.Body = fs.createReadStream(menuImg);
+                    
+                s3.upload(param, function(err, data) {
+                    if(err) {
+                        console.log(err);
+                    }
+                    else {
+                        console.log(data);
+                    }
+                });
             });
         }).catch(function(err) {
-            console.log(err);
+            console.log(err);       
         });
 
+        
         console.log(picture_url);
-
         console.log('메뉴 이름: ' + name + ', 사이즈: '+ coffee_size + ', 구분: ' + kind + ', 옵션: ' + option_name + ', description: ' + description);
         console.log('현재 파일 정보 : ' + filename + ', ' + mimetype + ', ' + size);
+
         coffee_list(req, res);
     }
     else {

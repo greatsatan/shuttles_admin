@@ -3,29 +3,52 @@
     <head>
         <meta charset="UTF-8">
         <title>Shuttles Event Management Page</title> 
+        <script src="/js/jquery-3.3.1.min.js"></script>
+        <script src="/js/bootstrap.min.js"></script>
+        <link type="text/css" rel="stylesheet" href="/css/bootstrap.css">
     </head>
     <body>
-        <h3>Menu List</h3>
-        <br>
-        <p>Shuttles 통계 페이지입니다.</p>
-        <br>
-        <table>
-            <tr>
-                <td><label>전체 주문 건:</label></td>
-                <td><%= result.length %></td>
-            </tr>
-            <tr>
-                <td><label>총 금액:</label></td>
-                <% 
-                    var sum=0;
-                    for(var i=0; i<result.length; i++) 
-                        sum += result[i].price;
-                    %>
-                <td><%= sum %></td>
-            </tr>
-        </table>
+        <div class="container">
+            <h3>Summary</h3>
             <br>
-        <br>
-        <input type="button" value="뒤로가기" onclick='history.back()'>
+            <p>Shuttles 통계 페이지입니다.</p>
+            <br>
+            <form method="get" action="/summary">
+            <select name="select_user">
+                <option name="select_user" value="all" selected="selected">전체</option>
+                <%
+                    for(var i=0; i<user.length; i++) {
+                %>
+                    <option name="select_user" value=<%=user[i].user_id%>><%=user[i].user_id %></option>
+                <%
+                    }
+                %>
+            </select>
+            <button type="submit" id="summary_submit" class="btn btn-primary">
+                    확인<i class="fa fa-check spaceLeft"></i>
+            </button>
+            <a href="/menu/list" class="btn btn-default pull-right">메뉴 관리</a>
+            <a href="/event/list" class="btn btn-default pull-right">공지사항 관리</a>
+            </form>
+            <br>
+            <table>
+                <tr>
+                    <td><label>전체 주문 건:</label></td>
+                    <td><%= result.length %></td>
+                </tr>
+                <tr>
+                    <td><label>총 금액:</label></td>
+                    <% 
+                        var sum=0;
+                        for(var i=0; i<result.length; i++) 
+                            sum += result[i].price;
+                        %>
+                    <td><%= sum %></td>
+                </tr>
+            </table>
+                <br>
+            <br>
+            <a href="/logout" class="btn btn-default pull-left">로그아웃</a>
+        </div>
     </body>
 </html>
