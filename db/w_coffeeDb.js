@@ -35,18 +35,16 @@ exports.dbConnect = function(data, callback) {
 
 var coffee_list = function(req, res) {
     pool.getConnection(function(err, connection) {
+
         connection.query("select * from coffee_list", function(err, results) {
             res.writeHead('200', {'Content-Type':'text/html;charset=utf8'});
-        
-            var context = {results: results};
+
+            var context = {
+                results: results,
+            };
             var length = results.length;
             var pathLen = imagePath.length;
-            for(var i=0; i<length; i++) {
-                var strLen = results[i].picture_url.length;
-                results[i].picture_url = "/"+results[i].picture_url.substring(pathLen, strLen);
-            }
-            console.log(context.results);
-            
+
             req.app.render('menuList', context, function(err, html) {
                 if(err) {throw err};
                 res.end(html);
@@ -161,8 +159,6 @@ exports.coffeeUpdate = function(req, res) {
         else {
             option_len = option_id.length;
             option_update_len = option_name.length-1;
-            console.log("기존: "+option_len);
-            console.log("변경: "+option_update_len);
             if(option_len < option_update_len) {
                 option_ins = 1;
             }

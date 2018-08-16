@@ -11,15 +11,15 @@ exports.summary = function(req, res) {
     pool.getConnection(function(err, connection) {
         var select_user = req.param("select_user");
         var user;
-        connection.query("select * from user", function(err, result) {
-            user = result;
+        connection.query("select * from user", function(err, results) {
+            user = results;
         });
 
         if(select_user == 'all') {
-            connection.query("select * from orders", function(err, result) {
+            connection.query("select * from orders", function(err, results) {
                 res.writeHead('200', {'Content-Type':'text/html;charset=utf8'});
                 var context = {
-                    result: result,
+                    results: results,
                     user: user
                 };
                 req.app.render('summary', context, function(err, html) {
@@ -30,10 +30,10 @@ exports.summary = function(req, res) {
             });
         }
         else {
-            connection.query('select * from orders where user_id=?', [select_user], function(err, result) {
+            connection.query('select * from orders where user_id=?', [select_user], function(err, results) {
                 res.writeHead('200', {'Content-Type':'text/html;charset=utf8'});
                 var context = {
-                    result: result,
+                    results: results,
                     user: user
                 };
                 req.app.render('summary', context, function(err, html) {

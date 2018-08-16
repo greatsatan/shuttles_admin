@@ -1,5 +1,4 @@
 var mysql = require('mysql');
-var string = require('string');
 var pool = mysql.createPool({
     connectionLimit: 10,
     host: 'localhost',
@@ -8,6 +7,7 @@ var pool = mysql.createPool({
     database: 'shuttlesDB'
 });
 var imagePath = "https://s3.ap-northeast-2.amazonaws.com/shuttles/coffee/";
+var coffeeDb = require('../db/w_coffeeDb');
 
 exports.login = function(req, res) {
     var paramId = req.param('id');
@@ -33,25 +33,9 @@ exports.login = function(req, res) {
                         authorized:true
                     }
                 }
-    
-                connection.query("select * from coffee_list", function(err, results) {
-                    res.writeHead('200', {'Content-Type':'text/html;charset=utf8'});
-                    
-                    var context = {results: results};
-                    var length = results.length;
-                    var pathLen = imagePath.length;
-                    for(var i=0; i<length; i++) {
-                        var strLen = results[i].picture_url.length;
-                        results[i].picture_url = results[i].picture_url.substring(pathLen, strLen);
-                    }
-                    
-                    req.app.render('menuList', context, function(err, html) {
-                        if(err) {throw err};
-                         res.end(html);
-                      });
-    
-                });
-    
+
+                coffeeDb.coffeeList(req, res);
+       
             }
             else {
                 res.redirect('/login.html');

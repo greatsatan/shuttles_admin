@@ -12,26 +12,10 @@ var errorHandler = expressErrorHandler({
 });
 var expressSession = require('express-session');
 var admin_menu = require('./routes/menu');
-var admin_event = require('./routes/event');
+var admin_notice = require('./routes/notice');
 var admin_login = require('./routes/login');
 var admin_summary = require('./routes/summary');
-
-app.set('views', __dirname+'/views');
-app.set('view engine', 'ejs');
-app.use(express.static(path.join(__dirname, 'public')));
-app.use(express.static(path.join(__dirname, 'uploads')));
-app.use(express.static(path.join(__dirname, 'management')));
-app.use(bodyParser.urlencoded({extended:true}));
-app.use(bodyParser.json());
-app.use(expressSession({
-    secret : 'my key',
-    resave : true,
-    saveSUninitialized : true
-}));var expressSession = require('express-session');
-var admin_menu = require('./routes/menu');
-var admin_event = require('./routes/event');
-var admin_login = require('./routes/login');
-var admin_summary = require('./routes/summary');
+var admin_todayDrink = require('./routes/todayDrink');
 
 app.set('views', __dirname+'/views');
 app.set('view engine', 'ejs');
@@ -48,8 +32,9 @@ app.use(expressSession({
 
 app.use('/', admin_login);
 app.use('/menu', admin_menu);
-app.use('/event', admin_event);
+app.use('/notice', admin_notice);
 app.use('/summary', admin_summary);
+app.use('/todaydrink', admin_todayDrink);
 
 app.use(expressErrorHandler.httpError(404));
 app.use(errorHandler);

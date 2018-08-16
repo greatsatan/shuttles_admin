@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>Shuttles Event Management Page</title> 
+        <title>Shuttles Summary Page</title> 
         <script src="/js/jquery-3.3.1.min.js"></script>
         <script src="/js/bootstrap.min.js"></script>
         <link type="text/css" rel="stylesheet" href="/css/bootstrap.css">
@@ -28,20 +28,20 @@
                     확인<i class="fa fa-check spaceLeft"></i>
             </button>
             <a href="/menu/list" class="btn btn-default pull-right">메뉴 관리</a>
-            <a href="/event/list" class="btn btn-default pull-right">공지사항 관리</a>
+            <a href="/notice/list" class="btn btn-default pull-right">공지사항 관리</a>
             </form>
             <br>
             <table>
                 <tr>
                     <td><label>전체 주문 건:</label></td>
-                    <td><%= result.length %></td>
+                    <td><%= results.length %></td>
                 </tr>
                 <tr>
                     <td><label>총 금액:</label></td>
                     <% 
                         var sum=0;
-                        for(var i=0; i<result.length; i++) 
-                            sum += result[i].price;
+                        for(var i=0; i<results.length; i++) 
+                            sum += results[i].price;
                         %>
                     <td><%= sum %></td>
                 </tr>

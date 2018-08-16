@@ -1,11 +1,11 @@
 var express = require('express');
-var db = require('../db/w_eventDb');
+var db = require('../db/w_noticeDb');
 var upload = require('./upload');
 var router = express.Router();
 
 router.post('/upload', upload.single('userfile'), function(req, res) {
     if(req.session.user) {
-        db.eventUpload(req, res);
+        db.noticeUpload(req, res);
     }
     else {
         res.redirect('/login.html');
@@ -14,7 +14,7 @@ router.post('/upload', upload.single('userfile'), function(req, res) {
 
 router.post('/update', upload.single('userfile'), function(req, res) {
     if(req.session.user) {
-        db.eventUpdate(req, res);
+        db.noticeUpdate(req, res);
     }
     else {
         res.redirect('/login.html');
@@ -23,7 +23,7 @@ router.post('/update', upload.single('userfile'), function(req, res) {
 
 router.post('/delete', function(req, res) {
     if(req.session.user) {
-        db.eventDelete(req, res);
+        db.noticeDelete(req, res);
     }
     else {
         res.redirect('/login.html');
@@ -32,7 +32,7 @@ router.post('/delete', function(req, res) {
 
 router.post('/update_page' ,function(req, res) {
     if(req.session.user) {
-        db.eventUpdatePage(req, res);
+        db.noticeUpdatePage(req, res);
     } else {
         res.redirect('/login.html');
     }
@@ -40,7 +40,7 @@ router.post('/update_page' ,function(req, res) {
 
 router.get('/list', function(req, res) {
     if(req.session.user) {
-        db.eventList(req, res);
+        db.noticeList(req, res);
     }
     else {
         res.redirect('/login.html');
@@ -49,7 +49,7 @@ router.get('/list', function(req, res) {
 
 router.get('/add', function(req, res) {
     if(req.session.user) {
-        res.redirect('/eventAdd.html');
+        res.redirect('/noticeAdd.html');
     } else {
         res.redirect('/login.html');
     }

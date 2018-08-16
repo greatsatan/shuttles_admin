@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <script src="/js/jquery-3.3.1.min.js"></script>
+        <script src="/js/bootstrap.min.js"></script>
+        <link type="text/css" rel="stylesheet" href="/css/bootstrap.css">
+        <script language='javascript'>
+            var clickedId = -1;
+            var clickedName = "";
+
+            function noImageHeaderError( obj ){
+                if( obj !=null){
+                    obj.src = "no_image.jpg"; // 변경하고자하는 이미지를 넣는다.
+                }
+            }
+
+            function SelectRow(obj) {
+                var table = document.getElementById("list-table");
+                var tr = table.getElementsByTagName("tr");
+
+                clickedId = obj.children[0].innerText;
+                clickedName = obj.children[2].innerText;
+                console.log(clickedId);
+                
+                for(var i=0; i<tr.length; i++){
+                   tr[i].style.backgroundColor = "white";
+                }
+                obj.style.backgroundColor= "#DCD8D8";
+            }
+
+            function onMouseOver(obj) {
+                if(obj.children[0].innerText != clickedId) {
+                    obj.style.backgroundColor = "#E9E7E7";
+                }
+            }
+
+            function onMouseOut(obj) {
+                if(obj.children[0].innerText != clickedId) {
+                    obj.style.backgroundColor = "white";    
+                }
+            }
+
+            function todayDrinkUpdate(del) {
+                if(clickedId > 0) {
+                    var actionUrl = "";
+                    var res = false;
+                    if(del == 1) {
+                        actionUrl = "/todaydrink/delete";
+                        var res = confirm("선택하신 " + clickedName + "메뉴를 오늘의 메뉴에서 삭제하시겠습니까?");
+                    }
+                    else {
+                        actionUrl = "/todaydrink/update_page";
+                        res = true;
+                    }
+                    if(res) {
+                        var form = document.createElement("form");
+                        form.setAttribute("charset", "UTF-8");
+                        form.setAttribute("method", "Post"); // Get 또는 Post 입력
+                        form.setAttribute("action", actionUrl);
+
+                        var field = document.createElement("input");
+                        field.setAttribute("type", "hidden");
+                        field.setAttribute("name", "todayDrink_id");
+                        field.setAttribute("value", clickedId);
+                        form.appendChild(field);
+
+                        document.body.appendChild(form);
+
+                        form.submit();
+                    }
+                }
+                else {
+                    alert("수정 혹은 삭제하실 메뉴를 선택해 주세요.");
+                }
+            }
+
+        </script>
+    </head>
+    <body>
+        <div class='container'>
+        <h3>today coffee menu List</h3>
+        <br>
+        <p>Shuttles 오늘의 커피 메뉴 리스트 페이지입니다.</p>
+        <br>
+        <a href="/todaydrink/add" class="btn btn-default pull-left">오늘의 메뉴 추가</a>
+        <a href="/menu/list" class="btn btn-default pull-right">메뉴 관리</a>
+        <br><br><br>
+        <div class="col-lg-12" id="select_prod" ></div>
+        <input class="btn btn-default pull-left" type="submit" value="수정" name="todayDrinkUpdate" onclick="todayDrinkUpdate(0)">
+        <input class="btn btn-default pull-left" type="submit" value="삭제" name="todayDrinkDelete" onclick="todayDrinkUpdate(1)">
+        <table id="list-table" class="table">
+            <thead>
+                <tr>
+                    <th>번호</th>
+                    <th>이름</th>
+                    <th>가격</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% for(var i=0; i<results.length; i++) {
+                    var todayDrink_id = results[i].todayDrinkMenu_id;
+                    var coffee_name = results[i].coffee_name;
+                    var price = results[i].price;
+                    %>
+                    <tr id="today_list" onmouseover="javascript:onMouseOver(this)" onmouseout="javascript:onMouseOut(this)" onclick="javascript:SelectRow(this)">
+                        <td><%= todayDrink_id %></td>
+                        <td><%= coffee_name %></td> 
+                        <td><%= price %></td> 
+                    </tr>
+                <%}%>
+            </tbody>
+        </table>
+        <br>
+        <a href="/logout" class="btn btn-default pull-left">로그아웃</a>
+        </div>
+    </body>
+</html>

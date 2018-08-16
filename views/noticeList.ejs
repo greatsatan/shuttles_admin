@@ -41,16 +41,16 @@
                 }
             }
 
-            function eventUpdate(del) {
+            function noticeUpdate(del) {
                 if(clickedId > 0) {
                     var actionUrl = "";
                     var res = false;
                     if(del == 1) {
-                        actionUrl = "/event/delete";
+                        actionUrl = "/notice/delete";
                         var res = confirm("선택하신 " + clickedName + "메뉴를 삭제하시겠습니까?");
                     }
                     else {
-                        actionUrl = "/event/update_page";
+                        actionUrl = "/notice/update_page";
                         res = true;
                     }
                     if(res) {
@@ -61,7 +61,7 @@
 
                         var field = document.createElement("input");
                         field.setAttribute("type", "hidden");
-                        field.setAttribute("name", "event_id");
+                        field.setAttribute("name", "notice_id");
                         field.setAttribute("value", clickedId);
                         form.appendChild(field);
 
@@ -79,44 +79,38 @@
     </head>
     <body>
         <div class='container'>
-        <h3>Event List</h3>
+        <h3>notice List</h3>
         <br>
         <p>Shuttles 공지사항 리스트 페이지입니다.</p>
         <br>
-        <a href="/event/add" class="btn btn-default pull-left">메뉴 추가</a>
+        <a href="/notice/add" class="btn btn-default pull-left">메뉴 추가</a>
         <a href="/summary?select_user=all" class="btn btn-default pull-right">통계</a>
         <a href="/menu/list" class="btn btn-default pull-right">메뉴 관리</a>
         <br><br><br>
         <div class="col-lg-12" id="select_prod" ></div>
-        <input class="btn btn-default pull-left" type="submit" value="수정" name="coffeeUpdate" onclick="eventUpdate(0)">
-        <input class="btn btn-default pull-left" type="submit" value="삭제" name="coffeeDelete" onclick="eventUpdate(1)">
+        <input class="btn btn-default pull-left" type="submit" value="수정" name="coffeeUpdate" onclick="noticeUpdate(0)">
+        <input class="btn btn-default pull-left" type="submit" value="삭제" name="coffeeDelete" onclick="noticeUpdate(1)">
         <table id="list-table" class="table">
             <thead>
                 <tr>
                     <th>번호</th>
                     <th>제목</th>
-                    <th>수정 시간</th>
-                    <th>작성 시간</th>
-                    <th>카운트</th>
                     <th>내용</th>
+                    <th>작성 시간</th>
                 </tr>
             </thead>
             <tbody>
                 <% for(var i=0; i<results.length; i++) {
-                    var event_id = results[i].event_id;
-                    var subject = results[i].subject;
-                    var content = results[i].content;
-                    var update_time = results[i].update_time;
-                    var create_time = results[i].create_time;
-                    var count = results[i].count;
+                    var notice_id = results[i].notice_id;
+                    var subject = results[i].notice_subject;
+                    var content = results[i].notice_content;
+                    var date = results[i].notice_date;
                     %>
-                    <tr id="event_list" onmouseover="javascript:onMouseOver(this)" onmouseout="javascript:onMouseOut(this)" onclick="javascript:SelectRow(this)">
-                        <td><%= event_id %></td>
+                    <tr id="notice_list" onmouseover="javascript:onMouseOver(this)" onmouseout="javascript:onMouseOut(this)" onclick="javascript:SelectRow(this)">
+                        <td><%= notice_id %></td>
                         <td><%= subject %></td> 
-                        <td><%= update_time %></td> 
-                        <td><%= create_time %></td> 
-                        <td><%= count %></td> 
-                        <td><%= content %></td>
+                        <td><%= content %></td> 
+                        <td><%= date %></td>
                     </tr>
                 <%}%>
             </tbody>
