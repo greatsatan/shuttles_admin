@@ -150,7 +150,8 @@ exports.coffeeUpdate = function(req, res) {
         var option_del = 0;
         filename = file.originalname;
         mimetype = file.mimetype;
-        size = file.size;    
+        size = file.size;
+	var picture_url = imagePath+filename; 
 
         if(!option_name || !option_price) {
             option_name = '없음';
@@ -171,9 +172,11 @@ exports.coffeeUpdate = function(req, res) {
             connection.query('select picture_version from coffee where coffee_id = ?', id,
             function(err, version) {
                 var ver = version[0].picture_version+1;
+
+		console.log(filename + " / " + picture_url);
                 
                 connection.query('call coffee_update(?, ?, ?, ?, ?, ?, ?, ?)', 
-                    [id, name,  filename, description, ver, coffee_size, price, kind],
+                    [id, name,  picture_url, description, ver, coffee_size, price, kind],
                 function(err, result) {
                     console.log(id+'번 id번호가 수정되었습니다.');
                 });
@@ -196,6 +199,27 @@ exports.coffeeUpdate = function(req, res) {
                         connection.query('update coffee_option set name=?, price=? where option_id=?', [option_name[idx], option_price[idx], option_id[idx]]);
                     }
                 }
+		
+		var menuImg = './uploads/'+filename;
+                jimp.read(menuImg, function(err, img) {
+                    img.write(menuImg, function(err) {
+                        param.Key = filename;
+                        param.Body = fs.createReadStream(menuImg);
+                            
+                        s3.upload(param, function(err, data) {
+                            if(err) {
+                                console.log(err);
+                            }
+                            else {
+                                console.log(data);
+                            }
+                        });
+                    });
+                }).catch(function(err) {
+                    console.log(err);       
+                });
+
+
                 coffee_list(req, res);  
             });
         });

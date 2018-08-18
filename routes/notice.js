@@ -3,7 +3,8 @@ var db = require('../db/w_noticeDb');
 var upload = require('./upload');
 var router = express.Router();
 
-router.post('/upload', upload.single('userfile'), function(req, res) {
+router.post('/upload', upload.single('notice_picture'), function(req, res) {
+    console.log(req);
     if(req.session.user) {
         db.noticeUpload(req, res);
     }

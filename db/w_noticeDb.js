@@ -28,11 +28,13 @@ exports.noticeList = function(req, res) {
 }
 
 exports.noticeUpload = function(req, res) {
+	
+    console.log(req);
     var subject = req.param("notice_subject");
     var content = req.param("notice_content");
     var picture = req.param("notice_picture");
 
-    var currentTime = date.getFullYear();
+    //var currentTime = date.getFullYear();
 
     console.log(subject + "/"+ content + "/" + picture);
 
@@ -81,9 +83,9 @@ exports.noticeDelete = function(req, res) {
     pool.getConnection(function(err, connection) {
         var notice_id = req.param('notice_id');
 
-        connection.query('delete from notice where notice_id=?', id,
+        connection.query('delete from notice where notice_id=?', notice_id,
             function(err, result) {
-            console.log(id+'번 id번호가 삭제되었습니다.');
+            console.log(notice_id+'번 id번호가 삭제되었습니다.');
             
             notice_list(req, res);    
         });
