@@ -5,7 +5,29 @@
         <title>Shuttles Summary Page</title> 
         <script src="/js/jquery-3.3.1.min.js"></script>
         <script src="/js/bootstrap.min.js"></script>
+        <script src="/js/jquery-ui.min.js"></script>
+        <script src="/js/datepicker-ko.js"></script>
         <link type="text/css" rel="stylesheet" href="/css/bootstrap.css">
+        <link rel="stylesheet" href="/js/jquery-ui.min.css">
+        
+        <script type="text/javascript">
+        $(function(){
+            $("#startDate").datepicker({
+                showOn: "both",
+                buttonImage: "images/calendar.png",
+                buttonImageOnly: true,
+                buttonText: "Select date"
+            });
+
+            $("#endDate").datepicker({
+                showOn: "both",
+                buttonImage: "images/calendar.png",
+                buttonImageOnly: true,
+                buttonText: "Select date"
+            });
+        })
+        </script>
+
     </head>
     <body>
         <div class="container">
@@ -24,6 +46,9 @@
                     }
                 %>
             </select>
+            <input type="text" name="date" id="startDate" name="startDate" size="12" />
+            ~
+            <input type="text" name="date" id="endDate" name="endDate" size="12" />
             <button type="submit" id="summary_submit" class="btn btn-primary">
                     확인<i class="fa fa-check spaceLeft"></i>
             </button>

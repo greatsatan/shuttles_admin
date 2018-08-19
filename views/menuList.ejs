@@ -103,11 +103,11 @@
         <p>Shuttles 메뉴리스트 페이지입니다.</p>
         <br>
         <a href="/menu/add" class="btn btn-default pull-left">메뉴 추가</a>
-        <a href="/summary?select_user=all" class="btn btn-default pull-right">통계</a>
+        <a href="/summary" class="btn btn-default pull-right">통계</a>
         <a href="/notice/list" class="btn btn-default pull-right">공지사항 관리</a>
         <a href="/todayDrink/list" class="btn btn-default pull-right">오늘의 메뉴 관리</a>
         <br><br><br>
-            <div class="col-lg-12" id="select_prod" ></div> 
+        <div class="col-lg-12" id="select_prod" ></div> 
             <input class="btn btn-default pull-left" type="submit" value="수정" name="coffeeUpdate" onclick="menuUpdate(0)">
             <input class="btn btn-default pull-left" type="submit" value="삭제" name="coffeeDelete" onclick="menuUpdate(1)">
             <table id="list-table" class="table">
@@ -133,6 +133,11 @@
                         var cz_name = results[i].cz_name;
                         var price = results[i].price;
                         var cs_name = results[i].cs_name;
+                        var today_menu ="";
+                        if(results[i].today_menu == 1) {
+                            today_menu = "오늘의 메뉴";
+                            price = results[i].today_price;
+                        }
                         %>
                         <tr id="menu_list" onmouseover="javascript:onMouseOver(this)" onmouseout="javascript:onMouseOut(this)" onclick="javascript:SelectRow(this)">
                             <td><input type='hidden' name='coffee_id' value=<%= coffee_id %>><%=coffee_id%></td>
@@ -142,6 +147,7 @@
                             <td><%= cz_name %></td> 
                             <td><%= price %></td> 
                             <td><%= cs_name %></td>
+                            <td><%= today_menu%></td>
                         </tr>
                 <%}%>
                 </tbody>

@@ -76,6 +76,24 @@
             }
 
         </script>
+        <style>
+            .my_thumbnail{
+                background-color:gray;
+                margin:10px;
+                width:60px;
+                height:60px;
+                background-size: cover;
+                background-repeat: no-repeat;
+                background-position: center center;
+            }
+            .my_thumbnail.round{
+                border-radius: 10%;
+            }
+            .my_thumbnail.circle{
+                border-radius: 100%;
+            }
+        </style>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
     </head>
     <body>
         <div class='container'>
@@ -86,31 +104,44 @@
         <a href="/todaydrink/add" class="btn btn-default pull-left">오늘의 메뉴 추가</a>
         <a href="/menu/list" class="btn btn-default pull-right">메뉴 관리</a>
         <br><br><br>
-        <div class="col-lg-12" id="select_prod" ></div>
-        <input class="btn btn-default pull-left" type="submit" value="수정" name="todayDrinkUpdate" onclick="todayDrinkUpdate(0)">
-        <input class="btn btn-default pull-left" type="submit" value="삭제" name="todayDrinkDelete" onclick="todayDrinkUpdate(1)">
-        <table id="list-table" class="table">
-            <thead>
-                <tr>
-                    <th>번호</th>
-                    <th>이름</th>
-                    <th>가격</th>
-                </tr>
-            </thead>
-            <tbody>
-                <% for(var i=0; i<results.length; i++) {
-                    var todayDrink_id = results[i].todayDrinkMenu_id;
-                    var coffee_name = results[i].coffee_name;
-                    var price = results[i].price;
-                    %>
-                    <tr id="today_list" onmouseover="javascript:onMouseOver(this)" onmouseout="javascript:onMouseOut(this)" onclick="javascript:SelectRow(this)">
-                        <td><%= todayDrink_id %></td>
-                        <td><%= coffee_name %></td> 
-                        <td><%= price %></td> 
+        <div class="col-lg-12" id="select_prod" ></div> 
+            <input class="btn btn-default pull-left" type="submit" value="수정" name="coffeeUpdate" onclick="todayDrinkUpdate(0)">
+            <input class="btn btn-default pull-left" type="submit" value="삭제" name="coffeeDelete" onclick="todayDrinkUpdate(1)">
+            <table id="list-table" class="table">
+                <thead>
+                    <tr>
+                        <th>번호</th>
+                        <th>사진</th>
+                        <th>이름</th>
+                        <th>설명</th>
+                        <th>사이즈</th>
+                        <th>가격</th>
+                        <th>구분</th>
                     </tr>
+                </thead>
+                <tbody>
+                <% 
+                    for(var i=0; i<results.length; i++) {
+                        var coffee_id = results[i].coffee_id;
+                        var c_name = results[i].c_name;
+                        var picture_url = results[i].picture_url;
+                        var description = results[i].description;
+                        var cz_name = results[i].cz_name;
+                        var price = results[i].today_price;
+                        var cs_name = results[i].cs_name;
+                        %>
+                        <tr id="menu_list" onmouseover="javascript:onMouseOver(this)" onmouseout="javascript:onMouseOut(this)" onclick="javascript:SelectRow(this)">
+                            <td><input type='hidden' name='coffee_id' value=<%= coffee_id %>><%=coffee_id%></td>
+                            <td><img class="my_thumbnail round" onError="javascript:noImageHeaderError(this)" src=<%= picture_url %>></td>
+                            <td><%= c_name %></td> 
+                            <td><%= description %></td> 
+                            <td><%= cz_name %></td> 
+                            <td><%= price %></td> 
+                            <td><%= cs_name %></td>
+                        </tr>
                 <%}%>
-            </tbody>
-        </table>
+                </tbody>
+            </table>
         <br>
         <a href="/logout" class="btn btn-default pull-left">로그아웃</a>
         </div>

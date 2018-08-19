@@ -14,7 +14,7 @@ router.get('/list', function(req, res){
 
 router.get('/add', function(req, res) {
     if(req.session.user) {
-        res.redirect('/todayDrinkAdd.html');
+        db.todayDrinkAdd(req, res);
     } else {
         res.redirect('/login.html');
     }

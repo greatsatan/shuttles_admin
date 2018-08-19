@@ -42,10 +42,11 @@ exports.noticeUpload = function(req, res) {
     
         if(subject && content) {
 
-            connection.query("insert into notice values(NULL, ?, ?, ?, NULL)", [subject, content, picture]);
+            connection.query("insert into notice values(NULL, ?, ?, ?, NULL)", [subject, content, picture], function(err) {
+                console.log('제목: ' + subject + ', 내용: '+ content);
+                notice_list(req, res);
+            });
                       
-            console.log('제목: ' + subject + ', 내용: '+ content);
-            notice_list(req, res);
         }
         else {
             console.log("내용을 전부 입력해주세요.");

@@ -110,6 +110,7 @@ exports.coffeeUpload = function(req, res) {
                     }
                     else {
                         console.log(data);
+                        coffee_list(req, res);
                     }
                 });
             });
@@ -122,7 +123,6 @@ exports.coffeeUpload = function(req, res) {
         console.log('메뉴 이름: ' + name + ', 사이즈: '+ coffee_size + ', 구분: ' + kind + ', 옵션: ' + option_name + ', description: ' + description);
         console.log('현재 파일 정보 : ' + filename + ', ' + mimetype + ', ' + size);
 
-        coffee_list(req, res);
     }
     else {
         console.log("내용을 전부 입력해주세요.");
@@ -212,6 +212,7 @@ exports.coffeeUpdate = function(req, res) {
                             }
                             else {
                                 console.log(data);
+                                coffee_list(req, res); 
                             }
                         });
                     });
@@ -219,8 +220,6 @@ exports.coffeeUpdate = function(req, res) {
                     console.log(err);       
                 });
 
-
-                coffee_list(req, res);  
             });
         });
     }

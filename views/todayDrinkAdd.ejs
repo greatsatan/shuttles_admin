@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
-    <script src="js/jquery-3.3.1.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <link type="text/css" rel="stylesheet" href="css/bootstrap.css">
+    <script src="/js/jquery-3.3.1.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="/css/bootstrap.css">
     <script type='text/javascript'>
         function add_item() {
             var div = document.createElement('div');
@@ -32,9 +32,9 @@
                         <label for="inputName">메뉴</label>
                         <select name="select_drink_menu">
                         <%
-                            for(var i=0; i<user.length; i++) {
+                            for(var i=0; i<results.length; i++) {
                         %>
-                            <option name="select_drink_menu" value=<%=todayDrink[i].coffee_id%>><%=todayDrink[i].name %></option>
+                            <option name="select_drink_menu" value=<%=results[i].coffee_id%>><%=results[i].name %></option>
                         <%
                             }
                         %>
