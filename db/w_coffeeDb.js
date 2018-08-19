@@ -60,7 +60,6 @@ exports.coffeeList = function(req, res) {
 
 exports.coffeeUpload = function(req, res) {
     var file = req.file;
-    console.log(file);
 
     var name = req.param('coffee_name');
     var coffee_size = req.param('coffee_size');
@@ -73,8 +72,6 @@ exports.coffeeUpload = function(req, res) {
     if(file && name && coffee_size && kind && price && description) {
         var option_length = 0;
         var filename = file.originalname;
-        var mimetype = file.mimetype;
-        var size = file.size;
         var picture_url = imagePath+filename;
 
         if(!option_name || !option_price) {

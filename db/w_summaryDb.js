@@ -21,6 +21,8 @@ exports.summary = function(req, res) {
             endDate = '9999-12-31';
         }
 
+        console.log(startDate + " / " + endDate);
+
         connection.query("select * from user", function(err, results) {
             user = results;
 

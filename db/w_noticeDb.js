@@ -1,5 +1,20 @@
 var mysql = require('mysql');
 var fs = require('fs');
+var jimp = require('jimp');
+var AWS = require('aws-sdk');
+var fs = require('fs');
+AWS.config.update({
+    "region": "ap-northeast-2",
+})
+var s3 = new AWS.S3();
+var param = {
+    'Bucket':'shuttles/coffee',
+    'Key':null,
+    'ACL':'public-read',
+    'Body': null, //fs.createReadStream('gf.png'),
+    'ContentType':'images/png'
+};
+var imagePath = "https://s3.ap-northeast-2.amazonaws.com/shuttles/coffee/";
 var pool = mysql.createPool({
     connectionLimit: 10,
     host: 'localhost',
@@ -32,19 +47,40 @@ exports.noticeUpload = function(req, res) {
     console.log(req);
     var subject = req.param("notice_subject");
     var content = req.param("notice_content");
-    var picture = req.param("notice_picture");
+    var file = req.file;
+    var filename, picture_url;
+    if(file) {
+        filename = file.originalname;
+        picture_url = imagePath + filename;
+    }
 
-    //var currentTime = date.getFullYear();
-
-    console.log(subject + "/"+ content + "/" + picture);
+    console.log(subject + "/"+ content + "/" + filename);
 
     pool.getConnection(function(err, connection) {
     
         if(subject && content) {
 
-            connection.query("insert into notice values(NULL, ?, ?, ?, NULL)", [subject, content, picture], function(err) {
-                console.log('제목: ' + subject + ', 내용: '+ content);
-                notice_list(req, res);
+            connection.query("insert into notice values(NULL, ?, ?, ?, NULL)", [subject, content, picture_url], function(err) {
+                var menuImg = './uploads/'+filename;
+                jimp.read(menuImg, function(err, img) {
+                    img.write(menuImg, function(err) {
+                        param.Key = filename;
+                        param.Body = fs.createReadStream(menuImg);
+                            
+                        s3.upload(param, function(err, data) {
+                            if(err) {
+                                console.log(err);
+                            }
+                            else {
+                                console.log(data);
+                                notice_list(req, res);
+                            }
+                        });
+                    });
+                }).catch(function(err) {
+                    console.log(err);       
+                });
+                
             });
                       
         }
