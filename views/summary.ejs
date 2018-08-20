@@ -71,6 +71,42 @@
                     <td><%= sum %></td>
                 </tr>
             </table>
+            <table id="list-table" class="table">
+                    <thead>
+                        <tr>
+                            <th>번호</th>
+                            <th>아이디</th>
+                            <th>상태</th>
+                            <th>주소</th>
+                            <th>가격</th>
+                            <th>메모</th>
+                            <th>날짜</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <% 
+                        for(var i=0; i<results.length; i++) {
+                            var order_id = results[i].order_id;
+                            var user_id = results[i].user_id;
+                            var state = results[i].state;
+                            var address = results[i].address;
+                            var price = results[i].price;
+                            var content = results[i].content;
+                            var date = results[i].date;
+                            %>
+                            <tr id="order_list">
+                                <td><input type='hidden' name='order_id' value=<%= order_id %>><%= order_id %></td> 
+                                <td><%= user_id %></td> 
+                                <td><%= state %></td> 
+                                <td><%= address %></td> 
+                                <td><%= price %></td>
+                                <td><%= content %></td>
+                                <td><%= date %></td>
+                            </tr>
+                    <%}%>
+                    </tbody>
+                </table>
+                
                 <br>
             <br>
             <a href="/logout" class="btn btn-default pull-left">로그아웃</a>

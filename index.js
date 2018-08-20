@@ -16,6 +16,7 @@ var admin_notice = require('./routes/notice');
 var admin_login = require('./routes/login');
 var admin_summary = require('./routes/summary');
 var admin_todayDrink = require('./routes/todayDrink');
+var admin_user = require('./routes/user');
 
 app.set('views', __dirname+'/views');
 app.set('view engine', 'ejs');
@@ -35,6 +36,7 @@ app.use('/menu', admin_menu);
 app.use('/notice', admin_notice);
 app.use('/summary', admin_summary);
 app.use('/todaydrink', admin_todayDrink);
+app.use('/user', admin_user);
 
 app.use(expressErrorHandler.httpError(404));
 app.use(errorHandler);

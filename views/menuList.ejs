@@ -44,11 +44,22 @@
                 if(clickedId > 0) {
                     var actionUrl = "";
                     var res = false;
-                    if(del == 1) {
+                    var price = 0;
+                    if(del == 2) {
+                        actionUrl = "/todayDrink/add";
+                        price = prompt("오늘의 메뉴 가격을 입력해주세요.");
+                        if(price >= 0 && price < 99999999) {
+                            var res = confirm("선택하신 " + clickedName + "메뉴를 오늘의 메뉴에 " + price +"원으로 추가하시겠습니까?");
+                        }
+                        else {
+                            alert("올바르지 않은 가격을 입력하였습니다.");
+                        }
+                    }
+                    else if(del == 1) {
                         actionUrl = "/menu/delete";
                         var res = confirm("선택하신 " + clickedName + "메뉴를 삭제하시겠습니까?");
                     }
-                    else {
+                    else if(del == 0) {
                         actionUrl = "/menu/update_page";
                         res = true;
                     }
@@ -63,6 +74,12 @@
                         field.setAttribute("name", "coffee_id");
                         field.setAttribute("value", clickedId);
                         form.appendChild(field);
+
+                        var field2 = document.createElement("input");
+                        field2.setAttribute("type", "hidden");
+                        field2.setAttribute("name", "price");
+                        field2.setAttribute("value", price);
+                        form.appendChild(field2);
 
                         document.body.appendChild(form);
 
@@ -110,6 +127,7 @@
         <div class="col-lg-12" id="select_prod" ></div> 
             <input class="btn btn-default pull-left" type="submit" value="수정" name="coffeeUpdate" onclick="menuUpdate(0)">
             <input class="btn btn-default pull-left" type="submit" value="삭제" name="coffeeDelete" onclick="menuUpdate(1)">
+            <input class="btn btn-default pull-left" type="submit" value="오늘의 메뉴 추가" name="todayDrinkAdd" onclick="menuUpdate(2)">
             <table id="list-table" class="table">
                 <thead>
                     <tr>
@@ -133,7 +151,7 @@
                         var cz_name = results[i].cz_name;
                         var price = results[i].price;
                         var cs_name = results[i].cs_name;
-                        var today_menu ="";
+                        var today_menu = "";
                         if(results[i].today_menu == 1) {
                             today_menu = "오늘의 메뉴";
                             price = results[i].today_price;
@@ -154,6 +172,7 @@
             </table>
         <br>
         <a href="/logout" class="btn btn-default pull-left">로그아웃</a>
+        <a href="/user/list" class="btn btn-default pull-right">회원관리</a>
         </div>
         <script>
             // 테이블의 Row 클릭시 값 가져오기

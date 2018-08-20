@@ -6,21 +6,13 @@
         <script src="/js/bootstrap.min.js"></script>
         <link type="text/css" rel="stylesheet" href="/css/bootstrap.css">
         <script language='javascript'>
-            var clickedId = -1;
-            var clickedName = "";
-
-            function noImageHeaderError( obj ){
-                if( obj !=null){
-                    obj.src = "/no_image.jpg"; // 변경하고자하는 이미지를 넣는다.
-                }
-            }
+            var clickedId = "";
 
             function SelectRow(obj) {
                 var table = document.getElementById("list-table");
                 var tr = table.getElementsByTagName("tr");
 
-                clickedId = obj.children[0].innerText;
-                clickedName = obj.children[1].innerText;
+                clickedId = obj.children[1].innerText;
                 console.log(clickedId);
                 
                 for(var i=0; i<tr.length; i++){
@@ -30,27 +22,27 @@
             }
 
             function onMouseOver(obj) {
-                if(obj.children[0].innerText != clickedId) {
+                if(obj.children[1].innerText != clickedId) {
                     obj.style.backgroundColor = "#E9E7E7";
                 }
             }
 
             function onMouseOut(obj) {
-                if(obj.children[0].innerText != clickedId) {
+                if(obj.children[1].innerText != clickedId) {
                     obj.style.backgroundColor = "white";    
                 }
             }
 
-            function noticeUpdate(del) {
-                if(clickedId > 0) {
+            function userUpdate(del) {
+                if(clickedId != "") {
                     var actionUrl = "";
                     var res = false;
                     if(del == 1) {
-                        actionUrl = "/notice/delete";
-                        var res = confirm("선택하신 " + clickedName + "메뉴를 삭제하시겠습니까?");
+                        actionUrl = "/user/delete";
+                        var res = confirm("선택하신 " + clickedId + "아이디를 삭제하시겠습니까?");
                     }
                     else {
-                        actionUrl = "/notice/update_page";
+                        actionUrl = "/user/update_page";
                         res = true;
                     }
                     if(res) {
@@ -79,38 +71,44 @@
     </head>
     <body>
         <div class='container'>
-        <h3>notice List</h3>
+        <h3>User List</h3>
         <br>
-        <p>Shuttles 공지사항 리스트 페이지입니다.</p>
+        <p>Shuttles 유저 리스트 페이지입니다.</p>
         <br>
-        <a href="/notice/add" class="btn btn-default pull-left">공지사항 추가</a>
         <a href="/summary" class="btn btn-default pull-right">통계</a>
+        <a href="/notice/list" class="btn btn-default pull-right">공지사항 관리</a>
         <a href="/menu/list" class="btn btn-default pull-right">메뉴 관리</a>
         <br><br><br>
         <div class="col-lg-12" id="select_prod" ></div>
-        <input class="btn btn-default pull-left" type="submit" value="수정" name="coffeeUpdate" onclick="noticeUpdate(0)">
-        <input class="btn btn-default pull-left" type="submit" value="삭제" name="coffeeDelete" onclick="noticeUpdate(1)">
+        <input class="btn btn-default pull-left" type="submit" value="수정" name="userUpdate" onclick="userUpdate(0)">
+        <input class="btn btn-default pull-left" type="submit" value="삭제" name="userDelete" onclick="userUpdate(1)">
         <table id="list-table" class="table">
             <thead>
                 <tr>
+                    <th>이름</th>
+                    <th>아이디</th>
+                    <th>주소</th>
                     <th>번호</th>
-                    <th>제목</th>
-                    <th>내용</th>
-                    <th>작성 시간</th>
+                    <th>타입</th>
+                    <th>마일리지</th>
                 </tr>
             </thead>
             <tbody>
                 <% for(var i=0; i<results.length; i++) {
-                    var notice_id = results[i].notice_id;
-                    var subject = results[i].notice_subject;
-                    var content = results[i].notice_content;
-                    var date = results[i].notice_date;
+                    var username = results[i].username;
+                    var user_id = results[i].user_id;
+                    var address = results[i].address;
+                    var phone_number = results[i].phone_number;
+                    var type = results[i].type;
+                    var mileage = results[i].mileage;
                     %>
-                    <tr id="notice_list" onmouseover="javascript:onMouseOver(this)" onmouseout="javascript:onMouseOut(this)" onclick="javascript:SelectRow(this)">
-                        <td><%= notice_id %></td>
-                        <td><%= subject %></td> 
-                        <td><%= content %></td> 
-                        <td><%= date %></td>
+                    <tr id="user_list" onmouseover="javascript:onMouseOver(this)" onmouseout="javascript:onMouseOut(this)" onclick="javascript:SelectRow(this)">
+                        <td><%= username %></td>
+                        <td><%= user_id %></td> 
+                        <td><%= address %></td> 
+                        <td><%= phone_number %></td>
+                        <td><%= type %></td>
+                        <td><%= mileage %></td>
                     </tr>
                 <%}%>
             </tbody>
