@@ -52,7 +52,7 @@
                     else {
                         actionUrl = "/todaydrink/update";
                         price = prompt("수정할 가격을 입력해주세요.");
-                        if(price >= 0 && price < 99999999) {
+                        if(price && price >= 0 && price < 99999999) {
                             var res = confirm("선택하신 " + clickedName + "오늘의 메뉴를 " + price +"원으로 수정하시겠습니까?");
                         }
                         else {
