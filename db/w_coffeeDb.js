@@ -83,42 +83,38 @@ exports.coffeeUpload = function(req, res) {
         }
 
         pool.getConnection(function(err, connection) {
-            connection.query("insert into coffee values(NULL, ?, ?, ?, 1)", [name, picture_url, description],
+            connection.query("insert into coffee values(NULL, ?, ?, ?, 1, 0)", [name, picture_url, description],
             function(err, result) {
                 var insertId = result.insertId;
                 console.log("id: " + insertId);
-                connection.query("insert into coffee_size values(NULL, ?, ?, ?)", [coffee_size, price, insertId]);
+                connection.query("insert into coffee_size values(NULL, ?, ?, ?, 0)", [coffee_size, price, insertId]);
                 connection.query("insert into coffee_state values(NULL, ?, ?)", [kind, insertId]);
                 for(var idx=0; idx<option_length;idx++) {
-                    connection.query("insert into coffee_option values(NULL, ?, ?, ?)", [option_name[idx], option_price[idx], insertId]);
+                    connection.query("insert into coffee_option values(NULL, ?, ?, ?)", [option_name[idx], option_price[idx], insertId], function(err, result) {
+                    
+                        var menuImg = './uploads/'+filename;
+                        jimp.read(menuImg, function(err, img) {
+                            img.resize(200, 200).write(menuImg, function(err) {
+                                param.Key = filename;
+                                param.Body = fs.createReadStream(menuImg);
+                                    
+                                s3.upload(param, function(err, data) {
+                                    if(err) {
+                                        console.log(err);
+                                    }
+                                    else {
+                                        console.log(data);
+                                        coffee_list(req, res);
+                                    }
+                                });
+                            });
+                        }).catch(function(err) {
+                            console.log(err);       
+                        });
+                    });
                 }
             });
         });
-
-        var menuImg = './uploads/'+filename;
-        jimp.read(menuImg, function(err, img) {
-            img.write(menuImg, function(err) {
-                param.Key = filename;
-                param.Body = fs.createReadStream(menuImg);
-                    
-                s3.upload(param, function(err, data) {
-                    if(err) {
-                        console.log(err);
-                    }
-                    else {
-                        console.log(data);
-                        coffee_list(req, res);
-                    }
-                });
-            });
-        }).catch(function(err) {
-            console.log(err);       
-        });
-
-        
-        console.log(picture_url);
-        console.log('메뉴 이름: ' + name + ', 사이즈: '+ coffee_size + ', 구분: ' + kind + ', 옵션: ' + option_name + ', description: ' + description);
-        console.log('현재 파일 정보 : ' + filename + ', ' + mimetype + ', ' + size);
 
     }
     else {

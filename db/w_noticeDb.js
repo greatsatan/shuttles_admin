@@ -63,7 +63,7 @@ exports.noticeUpload = function(req, res) {
             connection.query("insert into notice values(NULL, ?, ?, ?, NULL)", [subject, content, picture_url], function(err) {
                 var menuImg = './uploads/'+filename;
                 jimp.read(menuImg, function(err, img) {
-                    img.write(menuImg, function(err) {
+                    img.resize(200, 200).write(menuImg, function(err) {
                         param.Key = filename;
                         param.Body = fs.createReadStream(menuImg);
                             

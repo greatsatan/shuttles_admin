@@ -35,46 +35,116 @@
                     <div class="form-group">
                         <label for="inputSize">사이즈</label>
                         <%
-                            if(result[0].cz_name == 'Regular') {
+                            if(result[0].cz_name == 'REGULAR') {
                         %>   
-                        <input type='radio' name='coffee_size' value='Regular' checked>Regular
-                        <input type='radio' name='coffee_size' value='tall'>tall
-                        <input type='radio' name='coffee_size' value='grande'>grande
+                        <input type='radio' name='coffee_size' value='REGULAR' checked>REGULAR
+                        <input type='radio' name='coffee_size' value='TALL'>TALL
+                        <input type='radio' name='coffee_size' value='GRANDE'>GRANDE
                         <%}
-                            if(result[0].cz_name == 'tall') {
+                            if(result[0].cz_name == 'TALL') {
                         %>
-                        <input type='radio' name='coffee_size' value='Regular'>Regualr
-                        <input type='radio' name='coffee_size' value='tall' checked>tall
-                        <<input type='radio' name='coffee_size' value='grande'>grande
+                        <input type='radio' name='coffee_size' value='REGULAR' >REGULAR
+                        <input type='radio' name='coffee_size' value='TALL' checked>TALL
+                        <input type='radio' name='coffee_size' value='GRANDE'>GRANDE
                         <%}
-                            if(result[0].cz_name == 'grande') {
+                            if(result[0].cz_name == 'GRANDE') {
                         %>
-                        <input type='radio' name='coffee_size' value='Regular'>Regualr
-                        <input type='radio' name='coffee_size' value='tall'>tall
-                        <input type='radio' name='coffee_size' value='grande' checked>grande
+                        <input type='radio' name='coffee_size' value='REGULAR' >REGULAR
+                        <input type='radio' name='coffee_size' value='TALL'>TALL
+                        <input type='radio' name='coffee_size' value='GRANDE' checked>GRANDE
                         <%}%>
                         <input type="number" class="form-control" id="inputSize" name="coffee_price" placeholder="가격을 입력해 주세요(숫자만)" value=<%= result[0].price %>>
                     </div>
                     <div class="form-group">
                         <label for="inputKind">구분</label>
                         <%
-                            if(result[0].cs_name == 'basic') {
+                            if(result[0].cs_name == 'BASIC') {
                         %>
-                        <input type='radio' name='coffee_kind' value='basic' checked>basic
-                        <input type='radio' name='coffee_kind' value='latte'>latte
-                        <input type='radio' name='coffee_kind' value='shake'>shake
+                        <input type='radio' name='coffee_kind' value='BASIC' checked>BASIC
+                        <input type='radio' name='coffee_kind' value='LATTE'>LATTE
+                        <input type='radio' name='coffee_kind' value='SHAKE'>SHAKE
+                        <input type='radio' name='coffee_kind' value='TEA'>TEA
+                        <input type='radio' name='coffee_kind' value='ADE'>ADE
+                        <input type='radio' name='coffee_kind' value='COLD BREW'>COLD BREW
+                        <input type='radio' name='coffee_kind' value='GINGER'>GINGER
+                        <input type='radio' name='coffee_kind' value='OTHER'>OTHER
                         <%}
-                            if(result[0].cs_name == 'latte') {
+                            if(result[0].cs_name == 'LATTE') {
                         %> 
-                        <input type='radio' name='coffee_kind' value='basic'>basic
-                        <input type='radio' name='coffee_kind' value='latte' checked>latte
-                        <input type='radio' name='coffee_kind' value='shake'>shake
+                        <input type='radio' name='coffee_kind' value='BASIC'>BASIC
+                        <input type='radio' name='coffee_kind' value='LATTE' checked>LATTE
+                        <input type='radio' name='coffee_kind' value='SHAKE'>SHAKE
+                        <input type='radio' name='coffee_kind' value='TEA'>TEA
+                        <input type='radio' name='coffee_kind' value='ADE'>ADE
+                        <input type='radio' name='coffee_kind' value='COLD BREW'>COLD BREW
+                        <input type='radio' name='coffee_kind' value='GINGER'>GINGER
+                        <input type='radio' name='coffee_kind' value='OTHER'>OTHER
                         <%}
-                            if(result[0].cs_name == 'shake') {
+                            if(result[0].cs_name == 'SHAKE') {
                         %> 
-                        <input type='radio' name='coffee_kind' value='basic'>basic
-                        <input type='radio' name='coffee_kind' value='latte'>latte
-                        <input type='radio' name='coffee_kind' value='shake' checked>shake
+                        <input type='radio' name='coffee_kind' value='BASIC'>BASIC
+                        <input type='radio' name='coffee_kind' value='LATTE'>LATTE
+                        <input type='radio' name='coffee_kind' value='SHAKE' checked>SHAKE
+                        <input type='radio' name='coffee_kind' value='TEA'>TEA
+                        <input type='radio' name='coffee_kind' value='ADE'>ADE
+                        <input type='radio' name='coffee_kind' value='COLD BREW'>COLD BREW
+                        <input type='radio' name='coffee_kind' value='GINGER'>GINGER
+                        <input type='radio' name='coffee_kind' value='OTHER'>OTHER
+                        <%}
+                            if(result[0].cs_name == 'TEA') {
+                        %> 
+                        <input type='radio' name='coffee_kind' value='BASIC'>BASIC
+                        <input type='radio' name='coffee_kind' value='LATTE'>LATTE
+                        <input type='radio' name='coffee_kind' value='SHAKE'>SHAKE
+                        <input type='radio' name='coffee_kind' value='TEA' checked>TEA
+                        <input type='radio' name='coffee_kind' value='ADE'>ADE
+                        <input type='radio' name='coffee_kind' value='COLD BREW'>COLD BREW
+                        <input type='radio' name='coffee_kind' value='GINGER'>GINGER
+                        <input type='radio' name='coffee_kind' value='OTHER'>OTHER
+                        <%}
+                            if(result[0].cs_name == 'ADE') {
+                        %> 
+                        <input type='radio' name='coffee_kind' value='BASIC'>BASIC
+                        <input type='radio' name='coffee_kind' value='LATTE'>LATTE
+                        <input type='radio' name='coffee_kind' value='SHAKE'>SHAKE
+                        <input type='radio' name='coffee_kind' value='TEA'>TEA
+                        <input type='radio' name='coffee_kind' value='ADE' checked>ADE
+                        <input type='radio' name='coffee_kind' value='COLD BREW'>COLD BREW
+                        <input type='radio' name='coffee_kind' value='GINGER'>GINGER
+                        <input type='radio' name='coffee_kind' value='OTHER'>OTHER
+                        <%}
+                            if(result[0].cs_name == 'COLD BREW') {
+                        %> 
+                        <input type='radio' name='coffee_kind' value='BASIC'>BASIC
+                        <input type='radio' name='coffee_kind' value='LATTE'>LATTE
+                        <input type='radio' name='coffee_kind' value='SHAKE'>SHAKE
+                        <input type='radio' name='coffee_kind' value='TEA'>TEA
+                        <input type='radio' name='coffee_kind' value='ADE'>ADE
+                        <input type='radio' name='coffee_kind' value='COLD BREW' checked>COLD BREW
+                        <input type='radio' name='coffee_kind' value='GINGER'>GINGER
+                        <input type='radio' name='coffee_kind' value='OTHER'>OTHER
+                        <%}
+                            if(result[0].cs_name == 'GINGER') {
+                        %> 
+                        <input type='radio' name='coffee_kind' value='BASIC'>BASIC
+                        <input type='radio' name='coffee_kind' value='LATTE'>LATTE
+                        <input type='radio' name='coffee_kind' value='SHAKE'>SHAKE
+                        <input type='radio' name='coffee_kind' value='TEA'>TEA
+                        <input type='radio' name='coffee_kind' value='ADE'>ADE
+                        <input type='radio' name='coffee_kind' value='COLD BREW'>COLD BREW
+                        <input type='radio' name='coffee_kind' value='GINGER' checked>GINGER
+                        <input type='radio' name='coffee_kind' value='OTHER'>OTHER
+                        <%}
+                            if(result[0].cs_name == 'OTHER') {
+                        %> 
+                        <input type='radio' name='coffee_kind' value='BASIC'>BASIC
+                        <input type='radio' name='coffee_kind' value='LATTE'>LATTE
+                        <input type='radio' name='coffee_kind' value='SHAKE'>SHAKE
+                        <input type='radio' name='coffee_kind' value='TEA'>TEA
+                        <input type='radio' name='coffee_kind' value='ADE'>ADE
+                        <input type='radio' name='coffee_kind' value='COLD BREW'>COLD BREW
+                        <input type='radio' name='coffee_kind' value='GINGER'>GINGER
+                        <input type='radio' name='coffee_kind' value='OTHER' checked>OTHER
                         <%}%>
                     </div>
                     <div class="form-group">
