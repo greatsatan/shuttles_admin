@@ -69,7 +69,7 @@ exports.coffeeUpload = function(req, res) {
     var option_price = req.param('option_price');
     var description = req.param('coffee_description');
 
-    if(file && name && coffee_size && kind && price && description) {
+    if(file && name && coffee_size && kind && price) {
         var option_length = 0;
         var filename = file.originalname;
         var picture_url = imagePath+filename;
@@ -136,7 +136,7 @@ exports.coffeeUpdate = function(req, res) {
     var description = req.param('coffee_description');
     var option_id = req.param('option_id');
 
-    if(file && name && coffee_size && kind && price && description) {
+    if(file && name && coffee_size && kind && price) {
         var option_len = 0;
         var option_update_len = 0;
         var option_ins = 0;
@@ -172,6 +172,26 @@ exports.coffeeUpdate = function(req, res) {
                     [id, name,  picture_url, description, ver, coffee_size, price, kind],
                 function(err, result) {
                     console.log(id+'번 id번호가 수정되었습니다.');
+
+                    var menuImg = './uploads/'+filename;
+                    jimp.read(menuImg, function(err, img) {
+                        img.resize(200,200).write(menuImg, function(err) {
+                            param.Key = filename;
+                            param.Body = fs.createReadStream(menuImg);
+                                
+                            s3.upload(param, function(err, data) {
+                                if(err) {
+                                    console.log(err);
+                                }
+                                else {
+                                    console.log(data);
+                                    coffee_list(req, res); 
+                                }
+                            });
+                        });
+                    }).catch(function(err) {
+                        console.log(err);       
+                    });
                 });
                 if(option_ins==1) {
                     for(var idx=0; idx<option_len; idx++) {
@@ -193,26 +213,6 @@ exports.coffeeUpdate = function(req, res) {
                     }
                 }
 		
-		var menuImg = './uploads/'+filename;
-                jimp.read(menuImg, function(err, img) {
-                    img.write(menuImg, function(err) {
-                        param.Key = filename;
-                        param.Body = fs.createReadStream(menuImg);
-                            
-                        s3.upload(param, function(err, data) {
-                            if(err) {
-                                console.log(err);
-                            }
-                            else {
-                                console.log(data);
-                                coffee_list(req, res); 
-                            }
-                        });
-                    });
-                }).catch(function(err) {
-                    console.log(err);       
-                });
-
             });
         });
     }
