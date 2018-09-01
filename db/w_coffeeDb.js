@@ -136,6 +136,8 @@ exports.coffeeUpdate = function(req, res) {
     var description = req.param('coffee_description');
     var option_id = req.param('option_id');
 
+    console.log(file + name + coffee_size + kind + price);
+
     if(file && name && coffee_size && kind && price) {
         var option_len = 0;
         var option_update_len = 0;
