@@ -34,7 +34,8 @@ exports.login = function(req, res) {
                     }
                 }
 
-                coffeeDb.coffeeList(req, res);
+                res.redirect('/menu/list?page=1');
+                //coffeeDb.coffeeList(req, res);
        
             }
             else {
