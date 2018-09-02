@@ -76,6 +76,23 @@
             }
 
         </script>
+        <style>
+                .my_thumbnail{
+                    background-color:gray;
+                    margin:10px;
+                    width:60px;
+                    height:60px;
+                    background-size: cover;
+                    background-repeat: no-repeat;
+                    background-position: center center;
+                }
+                .my_thumbnail.round{
+                    border-radius: 10%;
+                }
+                .my_thumbnail.circle{
+                    border-radius: 100%;
+                }
+        </style>
     </head>
     <body>
         <div class='container'>
@@ -94,6 +111,7 @@
             <thead>
                 <tr>
                     <th>번호</th>
+                    <th>사진</th>
                     <th>제목</th>
                     <th>내용</th>
                     <th>작성 시간</th>
@@ -105,9 +123,11 @@
                     var subject = results[i].notice_subject;
                     var content = results[i].notice_content;
                     var date = results[i].notice_date;
+                    var notice_picture = results[i].notice_picture;
                     %>
                     <tr id="notice_list" onmouseover="javascript:onMouseOver(this)" onmouseout="javascript:onMouseOut(this)" onclick="javascript:SelectRow(this)">
-                        <td><%= notice_id %></td>
+                        <td><input type='hidden' name='notice_id' value=<%= notice_id %>><%= notice_id %></td>
+                        <td><img class="my_thumbnail round" onError="javascript:noImageHeaderError(this)" src=<%= notice_picture %>></td>
                         <td><%= subject %></td> 
                         <td><%= content %></td> 
                         <td><%= date %></td>

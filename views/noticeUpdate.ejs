@@ -4,7 +4,16 @@
         <script type="text/javascript" src="/js/jquery-3.3.1.min.js"></script>
         <script type="text/javascript" src="/js/bootstrap.min.js"></script>
         <link type="text/css" rel="stylesheet" href="/css/bootstrap.css">
+        <link type="text/css" rel="stylesheet" href="/css/file.css">
         <meta charset="UTF-8">
+        <script>
+            function file_change(file) {
+                var str=file.lastIndexOf("\\")+1;	//파일 마지막 "\" 루트의 길이 이후부터 글자를 잘라 파일명만 가져온다.
+                console.log(str);
+                file = file.substring(str, file.length);
+                document.getElementById('fileName').value=file;
+            }
+        </script>
         <title>Shuttles Notice Management Page</title> 
     </head>
     <body>
@@ -26,7 +35,13 @@
                     </div>
                     <div class="form-group">
                         <label for="inputPicture">사진</label>
-                        <input type="file" name="notice_picture">
+                        <!--<input type="file" name="notice_picture">-->
+                        <div class="file_input_div">
+                            <input type="button" value="파일 선택" class="file_input_button"/>
+                            <input type="file" id="notice_picture" name="notice_picture" class="file_input_hidden" 
+                            onchange="javascript:file_change(this.value);"/>
+                        </div>
+                        <input id="fileName" class="file_input_textbox" readonly value=<%= result[0].notice_picture%>>
                     </div>
                     <div class="form-group text-center">
                         <button type="submit" id="notice_submit" class="btn btn-primary">
@@ -36,6 +51,7 @@
                             뒤로가기<i class="fa fa-times spaceLeft"></i>
                         </button>
                     </div>
+                    <input type='hidden' name='notice_id' value=<%= result[0].notice_id %>>
                 </form>
             </div>
         </article>

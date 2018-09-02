@@ -40,7 +40,7 @@ var coffee_list = function(req, res) {
             res.writeHead('200', {'Content-Type':'text/html;charset=utf8'});
 
             var context = {
-                results: results,
+                results: results
             };
             var length = results.length;
             var pathLen = imagePath.length;
@@ -138,15 +138,11 @@ exports.coffeeUpdate = function(req, res) {
 
     console.log(file + name + coffee_size + kind + price);
 
-    if(file && name && coffee_size && kind && price) {
+    if(name && coffee_size && kind && price) {
         var option_len = 0;
         var option_update_len = 0;
         var option_ins = 0;
         var option_del = 0;
-        filename = file.originalname;
-        mimetype = file.mimetype;
-        size = file.size;
-	    var picture_url = imagePath+filename; 
 
         if(!option_name || !option_price) {
             option_name = '없음';
@@ -161,62 +157,82 @@ exports.coffeeUpdate = function(req, res) {
             else if(option_len > option_update_len) {
                 option_del = 1;
             }
-        }   
+        }  
 
         pool.getConnection(function(err, connection) {
-            connection.query('select picture_version from coffee where coffee_id = ?', id,
-            function(err, version) {
-                var ver = version[0].picture_version+1;
+            if(option_ins==1) {
+                for(var idx=0; idx<option_len; idx++) {
+                    connection.query('update coffee_option set name=?, price=? where option_id=?', [option_name[idx], option_price[idx], option_id[idx]]);
+                }
+                for(var idx=option_len; idx<option_update_len; idx++) {
+                    connection.query("insert into coffee_option values(NULL, ?, ?, ?)", [option_name[idx], option_price[idx], id]);
+                }
+            }
+            else if(option_del==1) {
+                connection.query('delete from coffee_option where coffee_id = ?', id);
+                for(var idx=0; idx<option_update_len; idx++) {   
+                    connection.query("insert into coffee_option values(NULL, ?, ?, ?)", [option_name[idx], option_price[idx], id]);
+                }
+            }
+            else {
+                for(var idx=0; idx<option_len; idx++) {
+                    connection.query('update coffee_option set name=?, price=? where option_id=?', [option_name[idx], option_price[idx], option_id[idx]]);
+                }
+            }
+        });
 
-		console.log(filename + " / " + picture_url);
-                
-                connection.query('call coffee_update(?, ?, ?, ?, ?, ?, ?, ?)', 
-                    [id, name,  picture_url, description, ver, coffee_size, price, kind],
+        if(file) {
+            var filename = file.originalname;
+            var mimetype = file.mimetype;
+            var size = file.size;
+            var picture_url = imagePath+filename; 
+
+            pool.getConnection(function(err, connection) {
+                connection.query('select picture_version from coffee where coffee_id = ?', id,
+                function(err, version) {
+                    var ver = version[0].picture_version+1;
+                    
+                    connection.query('call coffee_update(?, ?, ?, ?, ?, ?, ?, ?)', 
+                        [id, name,  picture_url, description, ver, coffee_size, price, kind],
+                    function(err, result) {
+                        console.log(id+'번 id번호가 수정되었습니다.');
+    
+                        var menuImg = './uploads/'+filename;
+                        jimp.read(menuImg, function(err, img) {
+                            img.resize(200,200).write(menuImg, function(err) {
+                                param.Key = filename;
+                                param.Body = fs.createReadStream(menuImg);
+                                    
+                                s3.upload(param, function(err, data) {
+                                    if(err) {
+                                        console.log(err);
+                                    }
+                                    else {
+                                        console.log(data);
+                                        coffee_list(req, res); 
+                                    }
+                                });
+                            });
+                        }).catch(function(err) {
+                            console.log(err);       
+                        });
+                    });
+            
+                });
+            });
+
+
+        }
+        else {
+            pool.getConnection(function(err, connection) {
+                connection.query('call coffee_update2(?, ?, ?, ?, ?, ?)', 
+                    [id, name, description, coffee_size, price, kind],
                 function(err, result) {
                     console.log(id+'번 id번호가 수정되었습니다.');
-
-                    var menuImg = './uploads/'+filename;
-                    jimp.read(menuImg, function(err, img) {
-                        img.resize(200,200).write(menuImg, function(err) {
-                            param.Key = filename;
-                            param.Body = fs.createReadStream(menuImg);
-                                
-                            s3.upload(param, function(err, data) {
-                                if(err) {
-                                    console.log(err);
-                                }
-                                else {
-                                    console.log(data);
-                                    coffee_list(req, res); 
-                                }
-                            });
-                        });
-                    }).catch(function(err) {
-                        console.log(err);       
-                    });
+                    coffee_list(req, res); 
                 });
-                if(option_ins==1) {
-                    for(var idx=0; idx<option_len; idx++) {
-                        connection.query('update coffee_option set name=?, price=? where option_id=?', [option_name[idx], option_price[idx], option_id[idx]]);
-                    }
-                    for(var idx=option_len; idx<option_update_len; idx++) {
-                        connection.query("insert into coffee_option values(NULL, ?, ?, ?)", [option_name[idx], option_price[idx], id]);
-                    }
-                }
-                else if(option_del==1) {
-                    connection.query('delete from coffee_option where coffee_id = ?', id);
-                    for(var idx=0; idx<option_update_len; idx++) {   
-                        connection.query("insert into coffee_option values(NULL, ?, ?, ?)", [option_name[idx], option_price[idx], id]);
-                    }
-                }
-                else {
-                    for(var idx=0; idx<option_len; idx++) {
-                        connection.query('update coffee_option set name=?, price=? where option_id=?', [option_name[idx], option_price[idx], option_id[idx]]);
-                    }
-                }
-		
             });
-        });
+        }
     }
     else {
         console.log("내용을 전부 입력해주세요.");
@@ -244,6 +260,14 @@ exports.coffeeUpdatePage = function(req, res) {
         connection.query("select * from coffee_update_list where coffee_id = ?", coffee_id, function(err, result) {
             res.writeHead('200', {'Content-Type':'text/html;charset=utf8'});
             var context = {result: result};
+            var pathLen = imagePath.length;
+            var picture_url = result[0].picture_url;
+            if(picture_url) {
+                result[0].picture_url = picture_url.substring(pathLen, picture_url.length);
+            }
+            else {
+                result[0].picture_url = "등록된사진없음";
+            }
             req.app.render('menuUpdate', context, function(err, html) {
                 if(err) {throw err};
                 res.end(html);

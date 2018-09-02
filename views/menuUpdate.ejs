@@ -4,6 +4,7 @@
         <script type="text/javascript" src="/js/jquery-3.3.1.min.js"></script>
         <script type="text/javascript" src="/js/bootstrap.min.js"></script>
         <link type="text/css" rel="stylesheet" href="/css/bootstrap.css">
+        <link type="text/css" rel="stylesheet" href="/css/file.css">
         <script language='javascript'>
             function add_item() {
                 var div = document.createElement('div');
@@ -14,7 +15,15 @@
             function remove_item(obj) {
                 document.getElementById('option').removeChild(obj.parentNode);
             }    
+
+            function file_change(file) {
+                var str=file.lastIndexOf("\\")+1;	//파일 마지막 "\" 루트의 길이 이후부터 글자를 잘라 파일명만 가져온다.
+                console.log(str);
+                file = file.substring(str, file.length);
+                document.getElementById('fileName').value=file;
+            }
         </script>
+        
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Shuttles Menu Management Page</title> 
@@ -174,7 +183,14 @@
                     
                     <div class="form-group">
                         <label for="inputPicture">사진</label>
-                        <input type="file" name="userfile">
+                        <!--<input type="file" id="userfile" name="userfile" value=<%= result[0].picture_url%>>!-->
+
+                        <div class="file_input_div">
+                            <input type="button" value="파일 선택" class="file_input_button"/>
+                            <input type="file" id="userfile" name="userfile" class="file_input_hidden" 
+                            onchange="javascript:file_change(this.value);"/>
+                        </div>
+                        <input id="fileName" class="file_input_textbox" readonly value=<%= result[0].picture_url%>>
                     </div>
                     <div class="form-group text-center">
                         <button type="submit" id="coffee_submit" class="btn btn-primary">

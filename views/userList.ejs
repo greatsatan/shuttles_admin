@@ -37,13 +37,24 @@
                 if(clickedId != "") {
                     var actionUrl = "";
                     var res = false;
+                    var auth = -1;
                     if(del == 1) {
                         actionUrl = "/user/delete";
                         var res = confirm("선택하신 " + clickedId + "아이디를 삭제하시겠습니까?");
                     }
                     else {
-                        actionUrl = "/user/update_page";
-                        res = true;
+                        actionUrl = "/user/update";
+                        var authString = ["가게사장님", "일반회원"];
+                        auth = prompt("1: 음식사장님 2: 일반회원");
+                        if(auth && (auth == 1 || auth == 2) ) {
+                            var res = confirm("선택하신 " + clickedId + "회원의 권한을 " + authString[auth-1] +"으로 변경하시겠습니까?");
+                        }
+                        else if(!auth){
+                            // cancel
+                        }
+                        else {
+                            alert("올바르지 않은 권한을 입력하였습니다.");
+                        }
                     }
                     if(res) {
                         var form = document.createElement("form");
@@ -53,9 +64,17 @@
 
                         var field = document.createElement("input");
                         field.setAttribute("type", "hidden");
-                        field.setAttribute("name", "notice_id");
+                        field.setAttribute("name", "user_id");
                         field.setAttribute("value", clickedId);
                         form.appendChild(field);
+
+                        console.log(clickedId);
+
+                        var field2 = document.createElement("input");
+                        field2.setAttribute("type", "hidden");
+                        field2.setAttribute("name", "auth");
+                        field2.setAttribute("value", auth);
+                        form.appendChild(field2);
 
                         document.body.appendChild(form);
 

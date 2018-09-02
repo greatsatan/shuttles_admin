@@ -30,40 +30,25 @@ exports.userList = function(req, res) {
     user_list(req, res);
 }
 
-exports.userAdd = function(req, res) {
-
-    pool.getConnection(function(err, connection) {
-        connection.query('update user set today_menu=1 where coffee_id=?', id, function(err, result) {
-            if(err) {
-                console.log(err);
-            }  
-            else {          
-                connection.query("update coffee_size set today_price=? where coffee_id=?", [price, id], function(err, result) {
-                    todayDrink_list(req, res);  
-                });
-            }
-        });
-    });
-}
-
 exports.userUpdate = function(req, res) {
-    var id = req.param('todayDrink_id');
-    var price = parseInt(req.param('price'));
+    var id = req.param('user_id');
+    var auth = parseInt(req.param('auth'));
 
-    console.log(id + " / " + price);
+    console.log(id + " / " + auth);
 
     pool.getConnection(function(err, connection) {        
-        connection.query("update coffee_size set today_price=? where coffee_id=?", [price, id], function(err, result) {
-            todayDrink_list(req, res);  
+        connection.query("update user set type=? where user_id=?", [auth, id], function(err, result) {
+            user_list(req, res);  
         });
     });
 }
 
 exports.userDelete = function(req, res) {
-    var id = req.param("todayDrink_id");
+    var id = req.param("user_id");
+    console.log(id + " / ");
     pool.getConnection(function(err, connection) {
-        connection.query("call today_menu_del(?)", [id], function(err, results) {
-            todayDrink_list(req, res);
+        connection.query("delete from user where user_id=?", [id], function(err, results) {
+            user_list(req, res);
         });
     });
 }

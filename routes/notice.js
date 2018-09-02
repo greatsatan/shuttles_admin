@@ -13,7 +13,7 @@ router.post('/upload', upload.single('notice_picture'), function(req, res) {
     }
 });
 
-router.post('/update', upload.single('userfile'), function(req, res) {
+router.post('/update', upload.single('notice_picture'), function(req, res) {
     if(req.session.user) {
         db.noticeUpdate(req, res);
     }

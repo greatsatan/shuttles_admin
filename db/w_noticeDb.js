@@ -44,45 +44,48 @@ exports.noticeList = function(req, res) {
 
 exports.noticeUpload = function(req, res) {
 	
-    console.log(req);
     var subject = req.param("notice_subject");
     var content = req.param("notice_content");
     var file = req.file;
-    var filename, picture_url;
-    if(file) {
-        filename = file.originalname;
-        picture_url = imagePath + filename;
-    }
+    var filename, picture_url = null;
 
-    console.log(subject + "/"+ content + "/" + filename);
+    console.log(subject + "/" + content);
 
     pool.getConnection(function(err, connection) {
     
         if(subject && content) {
 
+            if(file) {
+                filename = file.originalname;
+                picture_url = imagePath + filename;
+            }
+
             connection.query("insert into notice values(NULL, ?, ?, ?, NULL)", [subject, content, picture_url], function(err) {
-                var menuImg = './uploads/'+filename;
-                jimp.read(menuImg, function(err, img) {
-                    img.resize(200, 200).write(menuImg, function(err) {
-                        param.Key = filename;
-                        param.Body = fs.createReadStream(menuImg);
-                            
-                        s3.upload(param, function(err, data) {
-                            if(err) {
-                                console.log(err);
-                            }
-                            else {
-                                console.log(data);
-                                notice_list(req, res);
-                            }
+                if(file) {
+                    var menuImg = './uploads/'+filename;
+                    jimp.read(menuImg, function(err, img) {
+                        img.resize(200, 200).write(menuImg, function(err) {
+                            param.Key = filename;
+                            param.Body = fs.createReadStream(menuImg);
+                                
+                            s3.upload(param, function(err, data) {
+                                if(err) {
+                                    console.log(err);
+                                }
+                                else {
+                                    console.log(data);
+                                    notice_list(req, res);
+                                }
+                            });
                         });
+                    }).catch(function(err) {
+                        console.log(err);       
                     });
-                }).catch(function(err) {
-                    console.log(err);       
-                });
-                
-            });
-                      
+                }
+                else {
+                    notice_list(req, res);
+                }
+            });     
         }
         else {
             console.log("내용을 전부 입력해주세요.");
@@ -91,29 +94,60 @@ exports.noticeUpload = function(req, res) {
 }
 
 exports.noticeUpdate = function(req, res) {
-    pool.getConnection(function(err, connection) {
-        var id = req.param('notice_id');
+    var id = req.param('notice_id');
 
-        var subject = req.param('notice_subject');
-        var content = req.param('notice_content');
-        var picture = req.param("notice_picture");
+    var subject = req.param('notice_subject');
+    var content = req.param('notice_content');
+    var file = req.file;
+    var filename, picture_url;
+    if(file) {
+        filename = file.originalname;
+        picture_url = imagePath + filename;
+    }
 
-        if(subject && content) {
-            
-            console.log('제목: ' + subject + ', 내용: '+ content);
-
-            connection.query('update notice set notice_subject=?, notice_content=?, notice_date=utc_timestamp() where notice_id=?', 
-                [subject, content, id],
-            function(err, result) {
-                console.log(id+'번 id번호가 수정되었습니다.');
-                
-                notice_list(req, res); 
-            });
-        }
-        else {
-            console.log("내용을 전부 입력해주세요.");  
-        }
-    });
+    if(subject && content) {
+        pool.getConnection(function(err, connection) {
+            if(file) {
+                console.log('제목: ' + subject + ', 내용: '+ content + ' 사진: ' + picture_url + " 아이디: " + id);
+                connection.query('update notice set notice_subject=?, notice_content=?, notice_picture=?, notice_date=utc_timestamp() where notice_id=?', 
+                    [subject, content, picture_url, id],
+                function(err, result) {
+                    var menuImg = './uploads/'+filename;
+                    jimp.read(menuImg, function(err, img) {
+                        img.resize(200, 200).write(menuImg, function(err) {
+                            param.Key = filename;
+                            param.Body = fs.createReadStream(menuImg);
+                                
+                            s3.upload(param, function(err, data) {
+                                if(err) {
+                                    console.log(err);
+                                }
+                                else {
+                                    console.log(data);
+                                    notice_list(req, res);
+                                }
+                            });
+                        });
+                    }).catch(function(err) {
+                        console.log(err);       
+                    });
+                });
+            }
+            else {
+                console.log('제목: ' + subject + ', 내용: '+ content);
+                connection.query('update notice set notice_subject=?, notice_content=?, notice_date=utc_timestamp() where notice_id=?', 
+                    [subject, content, id],
+                function(err, result) {
+                    console.log(id+'번 id번호가 수정되었습니다.');
+                    
+                    notice_list(req, res); 
+                });
+            }
+        });
+    }
+    else {
+        console.log("내용을 전부 입력해주세요.");  
+    }
 }
 
 exports.noticeDelete = function(req, res) {
@@ -137,6 +171,14 @@ exports.noticeUpdatePage = function(req, res) {
         connection.query("select * from notice where notice_id = ?", notice_id, function(err, result) {
             res.writeHead('200', {'Content-Type':'text/html;charset=utf8'});
             var context = {result: result};
+            var pathLen = imagePath.length;
+            var notice_picture = result[0].notice_picture;
+            if(notice_picture) {
+                result[0].notice_picture = notice_picture.substring(pathLen, notice_picture.length);
+            }
+            else {
+                result[0].notice_picture = "등록된사진없음";
+            }
             req.app.render('noticeUpdate', context, function(err, html) {
                 if(err) {throw err};
                 res.end(html);
