@@ -44,10 +44,11 @@
                     }
                     else {
                         actionUrl = "/user/update";
-                        var authString = ["가게사장님", "일반회원"];
-                        auth = prompt("1: 음식사장님 2: 일반회원");
-                        if(auth && (auth == 1 || auth == 2) ) {
-                            var res = confirm("선택하신 " + clickedId + "회원의 권한을 " + authString[auth-1] +"으로 변경하시겠습니까?");
+                        var authString = ["일반회원", "관리자", "가게사장님"];
+                        auth = prompt("1: 일반회원 2: 관리자 3: 가게사장님");
+                        if(auth && (auth == 1 || auth == 2  || auth == 3) ) {
+                            auth -= auth;
+                            var res = confirm("선택하신 " + clickedId + "회원의 권한을 " + authString[auth] +"으로 변경하시겠습니까?");
                         }
                         else if(!auth){
                             // cancel
