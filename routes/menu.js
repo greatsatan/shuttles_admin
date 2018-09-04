@@ -39,6 +39,15 @@ router.post('/delete', function(req, res) {
     }
 });
 
+router.post('/sold_out', function(req, res) {
+    if(req.session.user) {
+        db.coffeeSoldOut(req, res);   
+    }
+    else {
+        res.redirect('/login.html');
+    }
+});
+
 router.get('/list', function(req, res) {
     if(req.session.user) {
         db.coffeeList(req, res);

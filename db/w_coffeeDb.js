@@ -50,15 +50,12 @@ var coffee_list = function(req, res) {
                 totalPageCount = data[0].cnt;
                 var curPage = req.param('page');
 
-                console.log("현재페이지 : " + curPage + " 전체페이지: " + totalPageCount);
-                
-
                 if(totalPageCount < 0 ){
                     totalPageCount = 0;
                 }
 
-                if(!curPage)
-                    curPage = 0;
+                if(!curPage || curPage < 1)
+                    curPage = 1;
 
                 var totalPage = Math.ceil(totalPageCount / page_size);// 전체 페이지수
                 var totalSet = Math.ceil(totalPage / page_list_size); //전체 세트수
@@ -74,9 +71,6 @@ var coffee_list = function(req, res) {
                 //0보다 크면 limit 함수에 들어갈 첫번째 인자 값 구하기
                     no = (curPage - 1) * 10
                 }
-
-                console.log('[0] curPage : ' + curPage + ' | [1] page_list_size : ' + page_list_size + ' | [2] page_size : ' + page_size + ' | [3] totalPage : ' + totalPage + ' | [4] totalSet : ' + totalSet + ' | [5] curSet : ' + curSet + ' | [6] startPage : ' + startPage + ' | [7] endPage : ' + endPage)
-                console.log(no + " / " + page_size);
                 
                 var result2 = {
                     "curPage": curPage,
@@ -89,7 +83,7 @@ var coffee_list = function(req, res) {
                     "endPage": endPage
                 };
 
-                connection.query("select * from coffee_list order by coffee_id desc limit ?,?", [no, page_size], function(err, results) {
+                connection.query("select * from coffee_list order by coffee_id limit ?,?", [no, page_size], function(err, results) {
                     res.writeHead('200', {'Content-Type':'text/html;charset=utf8'});
         
                     var context = {
@@ -198,7 +192,7 @@ exports.coffeeUpdate = function(req, res) {
     console.log(file + name + coffee_size + kind + price);
 
     if(name && coffee_size && kind && price) {
-        var option_len = 0;
+        var option_len = 0; 
         var option_update_len = 0;
         var option_ins = 0;
         var option_del = 0;
@@ -332,6 +326,23 @@ exports.coffeeUpdatePage = function(req, res) {
                 res.end(html);
             });
 
+        });
+    });
+}
+
+exports.coffeeSoldOut = function(req, res) {
+    var id = req.param('coffee_id');
+    var state = req.param('coffee_state');
+    var bState = (state == 0)?true:false;
+
+    console.log(state + " / " + bState);
+
+    pool.getConnection(function(err, connection) {
+        connection.query('update coffee set coffee_state=? where coffee_id=?', [bState, id],
+            function(err, result) {
+            console.log(id+'번 id번호 판매 종료되었습니다.');
+            
+            coffee_list(req, res);     
         });
     });
 }

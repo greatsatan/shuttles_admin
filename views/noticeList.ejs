@@ -21,7 +21,6 @@
 
                 clickedId = obj.children[0].innerText;
                 clickedName = obj.children[1].innerText;
-                console.log(clickedId);
                 
                 for(var i=0; i<tr.length; i++){
                    tr[i].style.backgroundColor = "white";
@@ -136,6 +135,64 @@
             </tbody>
         </table>
         <br>
+        <ul class="pager">
+        <%
+            var curSet = pasing.curSet
+            var endPage = pasing.endPage
+            var startPage = pasing.startPage
+            var totalSet = pasing.totalSet
+            var totalPage = pasing.totalPage
+            var page_list_size = pasing.page_list_size
+            var page_size = pasing.page_size
+            var curPage = pasing.curPage
+        
+            if(curSet > 1){
+        %>
+        
+        <li value=(startPage -1) class="previous">
+        <a href='/notice/list?page=<%= ( startPage - 1) %>'>이전페이지</a>
+        </li>
+        
+        <%
+            }
+            for(var i = startPage; i <= endPage; i++){
+                if(i > totalPage){break;}
+                
+                if(i == curPage){
+        %>
+        <li value=<%= i %> class='' >
+        <a href='/notice/list?page=<%= i %>'>
+        <%= i %>
+        </a>
+        </li>
+        
+        <%
+                }else{
+        %>
+        
+        <li value=<%= i %> class='active' >
+        <a href='/notice/list?page=<%= i %>'>
+        <%= i %>
+        </a>
+        </li>
+            
+        <%
+                }
+            }
+        %>
+        
+        <%
+            if(curSet < totalSet){
+        %>
+        <li value=( endPage + 1) class="next">
+        <a href='/notice/list?page=<%= ( endPage + 1) %>'>다음페이지</a>
+        </li>
+        <%
+            }
+        %>
+        
+        </ul>
+        
         <a href="/logout" class="btn btn-default pull-left">로그아웃</a>
         </div>
     </body>

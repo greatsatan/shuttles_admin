@@ -7,6 +7,8 @@
         <script language='javascript'>
             var clickedId = -1;
             var clickedName = "";
+            var clickedState = 0;
+            var stateWord = (clickedState == 0)?"판매종료":"판매시작";
 
             function noImageHeaderError( obj ){
                 if( obj !=null){
@@ -17,10 +19,14 @@
             function SelectRow(obj) {
                 var table = document.getElementById("list-table");
                 var tr = table.getElementsByTagName("tr");
-
+                
                 clickedId = obj.children[0].innerText;
                 clickedName = obj.children[2].innerText;
-                console.log(clickedId);
+                clickedState = obj.children[8].children.coffee_state.value;             
+
+                stateWord = (clickedState == 0)?"판매종료":"판매시작";
+                
+                document.getElementById("coffeeSoldOut").value = stateWord;
                 
                 for(var i=0; i<tr.length; i++){
                    tr[i].style.backgroundColor = "white";
@@ -45,7 +51,12 @@
                     var actionUrl = "";
                     var res = false;
                     var price = 0;
-                    if(del == 2) {
+                    if(del == 3) {
+                        actionUrl = "/menu/sold_out";
+                        
+                        var res = confirm("선택하신 " + clickedName + "메뉴를 "+ stateWord +"하시겠습니까?");
+                    }
+                    else if(del == 2) {
                         actionUrl = "/todayDrink/add";
                         price = prompt("오늘의 메뉴 가격을 입력해주세요.");
                         if(price && price >= 0 && price < 99999999) {
@@ -84,13 +95,19 @@
                         field2.setAttribute("value", price);
                         form.appendChild(field2);
 
+                        var field3 = document.createElement("input");
+                        field3.setAttribute("type", "hidden");
+                        field3.setAttribute("name", "coffee_state");
+                        field3.setAttribute("value", clickedState);
+                        form.appendChild(field3);                       
+
                         document.body.appendChild(form);
 
                         form.submit();
                     }
                 }
                 else {
-                    alert("수정 혹은 삭제하실 메뉴를 선택해 주세요.");
+                    alert("수정할 메뉴를 선택해 주세요.");
                 }
             }
 
@@ -132,6 +149,7 @@
             <input class="btn btn-default pull-left" type="submit" value="수정" name="coffeeUpdate" onclick="menuUpdate(0)">
             <input class="btn btn-default pull-left" type="submit" value="삭제" name="coffeeDelete" onclick="menuUpdate(1)">
             <input class="btn btn-default pull-left" type="submit" value="오늘의 메뉴 추가" name="todayDrinkAdd" onclick="menuUpdate(2)">
+            <input class="btn btn-default pull-left" type="submit" value="판매종료" id="coffeeSoldOut" name="coffeeSoldOut" onclick="menuUpdate(3)">
             <table id="list-table" class="table">
                 <thead>
                     <tr>
@@ -143,6 +161,7 @@
                         <th>가격</th>
                         <th>구분</th>
                         <th>오늘의 메뉴</th>
+                        <th>마감여부</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -155,14 +174,17 @@
                         var cz_name = results[i].cz_name;
                         var price = results[i].price;
                         var cs_name = results[i].cs_name;
-                        var today_menu = "";
+                        var today_menu = "", coffee_state = "판매 중";
                         if(results[i].today_menu == 1) {
                             today_menu = "오늘의 메뉴";
                             price = results[i].today_price;
                         }
+                        if(results[i].coffee_state == 1) {
+                            coffee_state = "판매종료";
+                        }
                         %>
                         <tr id="menu_list" onmouseover="javascript:onMouseOver(this)" onmouseout="javascript:onMouseOut(this)" onclick="javascript:SelectRow(this)">
-                            <td><input type='hidden' name='coffee_id' value=<%= coffee_id %>><%=coffee_id%></td>
+                             <td><input type='hidden' name='coffee_id' value=<%= coffee_id %>><%=coffee_id%></td>
                             <td><img class="my_thumbnail round" onError="javascript:noImageHeaderError(this)" src=<%= picture_url %>></td>
                             <td><%= c_name %></td> 
                             <td><%= description %></td> 
@@ -170,6 +192,7 @@
                             <td><%= price %></td> 
                             <td><%= cs_name %></td>
                             <td><%= today_menu%></td>
+                            <td><input type='hidden' name='coffee_state' value=<%= results[i].coffee_state %>><%= coffee_state%></td>
                         </tr>
                 <%}%>
                 </tbody>
