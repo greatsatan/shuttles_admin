@@ -111,6 +111,41 @@
                 }
             }
 
+            function marketUpdate() {
+                var actionUrl = "/menu/coffeeShop";
+                var market_state = document.getElementById("market_state").value;
+                var res = 0;
+                if(market_state == 0) { // 현재 OPEN 상태 이므로
+                    res = confirm("가게 문을 닫겠습니까?");
+                }
+                else {
+                    res = confirm("가게 문을 열겠습니까?");
+                }
+                
+                if(res) {
+                    var form = document.createElement("form");
+                    form.setAttribute("charset", "UTF-8");
+                    form.setAttribute("method", "Post"); // Get 또는 Post 입력
+                    form.setAttribute("action", actionUrl);
+
+                    var field = document.createElement("input");
+                    field.setAttribute("type", "hidden");
+                    field.setAttribute("name", "market_state");
+                    field.setAttribute("value", market_state);
+                    form.appendChild(field);
+
+                    document.body.appendChild(form);
+                    if(market_state == 0) {
+                        alert("가게 문을 닫았습니다. 주문을 할 수 없습니다.");
+                    }
+                    else {
+                        alert("가게 문을 열었습니다. 주문을 할 수 있습니다.");
+                    }
+
+                    form.submit();
+                }
+            }
+
         </script>
         <style>
                 .my_thumbnail{
@@ -136,8 +171,13 @@
     <body>
         <div class='container'>
         <h3>Menu List</h3>
+        <% 
+            var market_state = ["CLOSE", "OPEN"];
+        %>
+        <input type="hidden" id="market_state" value=<%= mState%>>
+        <input class="btn btn-default pull-right" type="submit"  name="marketUpdate" onclick="marketUpdate()" value=<%= market_state[mState]%>>
         <br>
-        <p>Shuttles 메뉴리스트 페이지입니다.</p>
+        <h3>SHUTTLES <span style="color:red"><%= market_state[(mState==0)?1:0] %></span> 상태 입니다</h3>
         <br>
         <a href="/menu/add" class="btn btn-default pull-left">메뉴 추가</a>
         <a href="/summary" class="btn btn-default pull-right">통계</a>

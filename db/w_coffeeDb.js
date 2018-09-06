@@ -83,22 +83,27 @@ var coffee_list = function(req, res) {
                     "endPage": endPage
                 };
 
-                connection.query("select * from coffee_list order by coffee_id limit ?,?", [no, page_size], function(err, results) {
-                    res.writeHead('200', {'Content-Type':'text/html;charset=utf8'});
-        
-                    var context = {
-                        results: results,
-                        pasing: result2
-                    };
-                    var length = results.length;
-                    var pathLen = imagePath.length;
-        
-                    req.app.render('menuList', context, function(err, html) {
-                        if(err) {throw err};
-                        res.end(html);
+                connection.query("select market_state from market where market_id = 0", function(err, state) {
+                    connection.query("select * from coffee_list order by coffee_id limit ?,?", [no, page_size], function(err, results) {
+                        res.writeHead('200', {'Content-Type':'text/html;charset=utf8'});
+            
+                        var context = {
+                            results: results,
+                            pasing: result2,
+                            mState: state[0].market_state
+                        };
+                        var length = results.length;
+                        var pathLen = imagePath.length;
+            
+                        req.app.render('menuList', context, function(err, html) {
+                            if(err) {throw err};
+                            res.end(html);
+                        });
+            
                     });
-        
                 });
+
+                
 
             }
         });
@@ -335,12 +340,23 @@ exports.coffeeSoldOut = function(req, res) {
     var state = req.param('coffee_state');
     var bState = (state == 0)?true:false;
 
-    console.log(state + " / " + bState);
-
     pool.getConnection(function(err, connection) {
         connection.query('update coffee set coffee_state=? where coffee_id=?', [bState, id],
             function(err, result) {
-            console.log(id+'번 id번호 판매 종료되었습니다.');
+            console.log(id+'번 판매 종료되었습니다.');
+            
+            coffee_list(req, res);     
+        });
+    });
+}
+
+exports.coffeeShop = function(req, res) {
+    var state = req.param('market_state');
+    state = (state==0)?1:0;
+    
+    pool.getConnection(function(err, connection) {
+        connection.query('update market set market_state=? where market_id=0', [state],
+            function(err, result) {
             
             coffee_list(req, res);     
         });

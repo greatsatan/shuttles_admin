@@ -46,7 +46,7 @@
                         var authString = ["일반회원", "관리자", "가게사장님"];
                         auth = prompt("1: 일반회원 2: 관리자 3: 가게사장님");
                         if(auth && (auth == 1 || auth == 2  || auth == 3) ) {
-                            auth -= auth;
+                            auth = auth-1;
                             var res = confirm("선택하신 " + clickedId + "회원의 권한을 " + authString[auth] +"으로 변경하시겠습니까?");
                         }
                         else if(!auth){

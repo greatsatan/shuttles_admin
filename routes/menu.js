@@ -48,6 +48,15 @@ router.post('/sold_out', function(req, res) {
     }
 });
 
+router.post('/coffeeShop', function(req, res) {
+    if(req.session.user) {
+        db.coffeeShop(req, res);   
+    }
+    else {
+        res.redirect('/login.html');
+    }
+});
+
 router.get('/list', function(req, res) {
     if(req.session.user) {
         db.coffeeList(req, res);
