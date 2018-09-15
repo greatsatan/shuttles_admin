@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <script src="/js/jquery-3.3.1.min.js"></script>
+        <script src="/js/bootstrap.min.js"></script>
+        <link type="text/css" rel="stylesheet" href="/css/bootstrap.css">
+        <script language='javascript'>
+            var clickedId = "";
+
+            function SelectRow(obj) {
+                var table = document.getElementById("list-table");
+                var tr = table.getElementsByTagName("tr");
+
+                clickedId = obj.children[0].innerText;
+                
+                for(var i=0; i<tr.length; i++){
+                   tr[i].style.backgroundColor = "white";
+                }
+                obj.style.backgroundColor= "#DCD8D8";
+            }
+
+            function onMouseOver(obj) {
+                if(obj.children[0].innerText != clickedId) {
+                    obj.style.backgroundColor = "#E9E7E7";
+                }
+            }
+
+            function onMouseOut(obj) {
+                if(obj.children[0].innerText != clickedId) {
+                    obj.style.backgroundColor = "white";    
+                }
+            }
+
+            function userUpdate(del) {
+                if(clickedId != "") {
+                    var actionUrl = "";
+                    var res = false;
+                    var auth = -1;
+                    if(del == 1) {
+                        actionUrl = "/webUser/delete";
+                        var res = confirm("선택하신 " + clickedId + "아이디를 삭제하시겠습니까?");
+                    }
+                    else {
+                        actionUrl = "/webUser/update";
+                        var authString = ["일반회원", "관리자", "가게사장님"];
+                        auth = prompt("1: 일반회원 2: 관리자 3: 가게사장님");
+                        if(auth && (auth == 1 || auth == 2  || auth == 3) ) {
+                            auth = auth-1;
+                            var res = confirm("선택하신 " + clickedId + "회원의 권한을 " + authString[auth] +"으로 변경하시겠습니까?");
+                        }
+                        else if(!auth){
+                            // cancel
+                        }
+                        else {
+                            alert("올바르지 않은 권한을 입력하였습니다.");
+                        }
+                    }
+                    if(res) {
+                        var form = document.createElement("form");
+                        form.setAttribute("charset", "UTF-8");
+                        form.setAttribute("method", "Post"); // Get 또는 Post 입력
+                        form.setAttribute("action", actionUrl);
+
+                        var field = document.createElement("input");
+                        field.setAttribute("type", "hidden");
+                        field.setAttribute("name", "user_id");
+                        field.setAttribute("value", clickedId);
+                        form.appendChild(field);
+
+                        console.log(clickedId);
+
+                        var field2 = document.createElement("input");
+                        field2.setAttribute("type", "hidden");
+                        field2.setAttribute("name", "auth");
+                        field2.setAttribute("value", auth);
+                        form.appendChild(field2);
+
+                        document.body.appendChild(form);
+
+                        form.submit();
+                    }
+                }
+                else {
+                    alert("수정 혹은 삭제하실 메뉴를 선택해 주세요.");
+                }
+            }
+
+        </script>
+    </head>
+    <body>
+        <div class='container'>
+        <h3>Web User List</h3>
+        <br>
+        <p>Shuttles 웹 유저 리스트 페이지입니다.</p>
+        <br>
+        <a href="/summary" class="btn btn-default pull-right">통계</a>
+        <a href="/notice/list" class="btn btn-default pull-right">공지사항 관리</a>
+        <a href="/menu/list" class="btn btn-default pull-right">메뉴 관리</a>
+        <br><br><br>
+        <div class="col-lg-12" id="select_prod" ></div>
+        <input class="btn btn-default pull-left" type="submit" value="권한수정" name="userUpdate" onclick="userUpdate(0)">
+        <input class="btn btn-default pull-left" type="submit" value="삭제" name="userDelete" onclick="userUpdate(1)">
+        <table id="list-table" class="table">
+            <thead>
+                <tr>
+                    <th>아이디</th>
+                    <th>가게이름</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% for(var i=0; i<results.length; i++) {
+                    var user_id = results[i].user_id;
+                    var market = results[i].market_id;
+                    %>
+                    <tr id="user_list" onmouseover="javascript:onMouseOver(this)" onmouseout="javascript:onMouseOut(this)" onclick="javascript:SelectRow(this)">
+                        <td><%= user_id %></td> 
+                        <td><%= market %></td> 
+                    </tr>
+                <%}%>
+            </tbody>
+        </table>
+        <br>
+        <ul class="pager">
+        <%
+            var curSet = pasing.curSet
+            var endPage = pasing.endPage
+            var startPage = pasing.startPage
+            var totalSet = pasing.totalSet
+            var totalPage = pasing.totalPage
+            var page_list_size = pasing.page_list_size
+            var page_size = pasing.page_size
+            var curPage = pasing.curPage
+        
+            if(curSet > 1){
+        %>
+        
+        <li value=(startPage -1) class="previous">
+        <a href='/user/list?page=<%= ( startPage - 1) %>'>이전페이지</a>
+        </li>
+        
+        <%
+            }
+            for(var i = startPage; i <= endPage; i++){
+                if(i > totalPage){break;}
+                
+                if(i == curPage){
+        %>
+        <li value=<%= i %> class='' >
+        <a href='/user/list?page=<%= i %>'>
+        <%= i %>
+        </a>
+        </li>
+        
+        <%
+                }else{
+        %>
+        
+        <li value=<%= i %> class='active' >
+        <a href='/user/list?page=<%= i %>'>
+        <%= i %>
+        </a>
+        </li>
+            
+        <%
+                }
+            }
+        %>
+        
+        <%
+            if(curSet < totalSet){
+        %>
+        <li value=( endPage + 1) class="next">
+        <a href='/user/list?page=<%= ( endPage + 1) %>'>다음페이지</a>
+        </li>
+        <%
+            }
+        %>
+        
+        </ul>
+        <a href="/logout" class="btn btn-default pull-left">로그아웃</a>
+        </div>
+    </body>
+</html>
