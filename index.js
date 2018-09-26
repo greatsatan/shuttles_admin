@@ -20,6 +20,7 @@ var admin_user = require('./routes/user');
 var admin_market = require('./routes/market');
 var admin_signup = require('./routes/singup');
 var admin_webUser = require('./routes/webUser');
+var admin_food = require('./routes/food');
 
 app.set('views', __dirname+'/views');
 app.set('view engine', 'ejs');
@@ -43,6 +44,7 @@ app.use('/user', admin_user);
 app.use('/market', admin_market);
 app.use('/signup', admin_signup);
 app.use('/webUser', admin_webUser);
+app.use('/food', admin_food);
 
 app.use(expressErrorHandler.httpError(404));
 app.use(errorHandler);

@@ -32,30 +32,12 @@
                 }
             }
 
-            function userUpdate(del) {
+            function userUpdate() {
                 if(clickedId != "") {
                     var actionUrl = "";
                     var res = false;
-                    var auth = -1;
-                    if(del == 1) {
-                        actionUrl = "/webUser/delete";
-                        var res = confirm("선택하신 " + clickedId + "아이디를 삭제하시겠습니까?");
-                    }
-                    else {
-                        actionUrl = "/webUser/update";
-                        var authString = ["일반회원", "관리자", "가게사장님"];
-                        auth = prompt("1: 일반회원 2: 관리자 3: 가게사장님");
-                        if(auth && (auth == 1 || auth == 2  || auth == 3) ) {
-                            auth = auth-1;
-                            var res = confirm("선택하신 " + clickedId + "회원의 권한을 " + authString[auth] +"으로 변경하시겠습니까?");
-                        }
-                        else if(!auth){
-                            // cancel
-                        }
-                        else {
-                            alert("올바르지 않은 권한을 입력하였습니다.");
-                        }
-                    }
+                    actionUrl = "/webUser/delete";
+                    var res = confirm("선택하신 " + clickedId + "아이디를 삭제하시겠습니까?");
                     if(res) {
                         var form = document.createElement("form");
                         form.setAttribute("charset", "UTF-8");
@@ -68,21 +50,13 @@
                         field.setAttribute("value", clickedId);
                         form.appendChild(field);
 
-                        console.log(clickedId);
-
-                        var field2 = document.createElement("input");
-                        field2.setAttribute("type", "hidden");
-                        field2.setAttribute("name", "auth");
-                        field2.setAttribute("value", auth);
-                        form.appendChild(field2);
-
                         document.body.appendChild(form);
 
                         form.submit();
                     }
                 }
                 else {
-                    alert("수정 혹은 삭제하실 메뉴를 선택해 주세요.");
+                    alert("삭제하실 메뉴를 선택해 주세요.");
                 }
             }
 
@@ -99,8 +73,7 @@
         <a href="/menu/list" class="btn btn-default pull-right">메뉴 관리</a>
         <br><br><br>
         <div class="col-lg-12" id="select_prod" ></div>
-        <input class="btn btn-default pull-left" type="submit" value="권한수정" name="userUpdate" onclick="userUpdate(0)">
-        <input class="btn btn-default pull-left" type="submit" value="삭제" name="userDelete" onclick="userUpdate(1)">
+        <input class="btn btn-default pull-left" type="submit" value="삭제" name="userDelete" onclick="userUpdate()">
         <table id="list-table" class="table">
             <thead>
                 <tr>
@@ -111,15 +84,17 @@
             <tbody>
                 <% for(var i=0; i<results.length; i++) {
                     var user_id = results[i].user_id;
-                    var market = results[i].market_id;
+                    var market_id = results[i].market_id;
+                    var market_name = results[i].market_name;
                     %>
                     <tr id="user_list" onmouseover="javascript:onMouseOver(this)" onmouseout="javascript:onMouseOut(this)" onclick="javascript:SelectRow(this)">
                         <td><%= user_id %></td> 
-                        <td><%= market %></td> 
+                        <td><%= market_name %></td> 
                     </tr>
                 <%}%>
             </tbody>
         </table>
+        
         <br>
         <ul class="pager">
         <%

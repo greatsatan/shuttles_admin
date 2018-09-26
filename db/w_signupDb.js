@@ -13,7 +13,7 @@ exports.signup = function(req, res) {
 
     if(paramId && paramPassword) {
         pool.getConnection(function(err, connection) {
-            connection.query("insert into web_user values(?, password(?), NULL)", [paramId, paramPassword], function(err, rows, fields) {
+            connection.query("insert into web_user values(?, password(?), NULL, NULL)", [paramId, paramPassword], function(err, rows, fields) {
                 if(!err) {
                     console.log(paramId + "회원이 가입하였습니다.");
                     res.redirect('/login.html');

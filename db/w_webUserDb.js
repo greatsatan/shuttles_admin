@@ -63,14 +63,13 @@ var web_user_list = function(req, res) {
                 res.writeHead('200', {'Content-Type':'text/html;charset=utf8'});
                 var context = {
                     results: results,
-                    pasing: result2
+                    pasing: result2,
                 };
     
                 req.app.render('webUserList', context, function(err, html) {
                     if(err) {throw err};
                     res.end(html);
                 });
-    
             });
 
         });
@@ -90,17 +89,17 @@ exports.webUserUpdate = function(req, res) {
 
     pool.getConnection(function(err, connection) {        
         connection.query("update web_user set market_id=? where user_id=?", [auth, id], function(err, result) {
-            user_list(req, res);  
+            web_user_list(req, res);  
         });
     });
 }
 
 exports.webUserDelete = function(req, res) {
     var id = req.param("user_id");
-    console.log(id + " / ");
+    console.log(id);
     pool.getConnection(function(err, connection) {
         connection.query("delete from web_user where user_id=?", [id], function(err, results) {
-            user_list(req, res);
+            web_user_list(req, res);
         });
     });
 }

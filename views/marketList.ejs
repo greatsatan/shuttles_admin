@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <link type="text/css" rel="stylesheet" href="/css/special.css">
+    </head>
+    
+    <body>
+        <div id="market_list">
+            <%
+                for(var i=0; i<results.length; i++) {
+                    var market_id = results[i].market_id;
+                    var market_name = results[i].market_name;
+                    var user_id = results[i].user_id;
+                    if(market_id == 0) continue;  // no show shuttles market              
+                    if(i%3==0) {
+            %>
+                <a href="/food/list?mId=<%= market_id %>" class="market big green"><%= market_name%> <span><%= user_id %></span></a>
+            <%
+                    }
+                    else if(i%3==1) {
+
+            %>
+                <a href="/food/list?mId=<%= market_id %>" class="market big blue"><%= market_name%> <span><%= user_id %></span></a>
+            <%            
+                    }
+                    else {
+            %>
+                <a href="/food/list?mId=<%= market_id %>" class="market big gray"><%= market_name%> <span><%= user_id %></span></a>        
+            <%            
+                    }
+                }
+            %>
+
+        </div>
+    </body>
+</html>
