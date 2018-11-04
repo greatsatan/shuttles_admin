@@ -300,36 +300,5 @@
         <a href="/user/list" class="btn btn-default pull-right">회원관리</a>
         <a href="/webUser/list" class="btn btn-default pull-right">웹 회원관리</a>
         </div>
-        <script>
-            // 테이블의 Row 클릭시 값 가져오기
-            /*$("#list-table tr").click(function(){     
-                var str = ""
-                var tdArr = new Array();    // 배열 선언
-                
-                // 현재 클릭된 Row(<tr>)
-                var tr = $(this);
-                var td = tr.children();
-                
-                // tr.text()는 클릭된 Row 즉 tr에 있는 모든 값을 가져온다.
-                //console.log("클릭한 Row의 모든 데이터 : "+tr.text());
-                
-                // 반복문을 이용해서 배열에 값을 담아 사용할 수 도 있다.
-                td.each(function(i){
-                    tdArr.push(td.eq(i).text());
-                });
-                
-                console.log("배열에 담긴 값 : "+ tdArr);
-                console.log(tr);
-                
-                // td.eq(index)를 통해 값을 가져올 수도 있다.
-                
-                clickedId = td.eq(0).text();
-                clickedName = td.eq(2).text();
-                
-                //str += "선택한 메뉴 이름 : <font color='blue'>" + clickedName + "</font>";            
-                //$("#select_prod").html(str);
-                
-            }); */       
-        </script>  
     </body>
 </html>

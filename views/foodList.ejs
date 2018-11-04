@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <script src="/js/jquery-3.3.1.min.js"></script>
+        <script src="/js/bootstrap.min.js"></script>
+        <link type="text/css" rel="stylesheet" href="/css/bootstrap.css">
+        <script language='javascript'>
+            var clickedId = -1;
+            var clickedName = "";
+            var clickedState = 0;
+            var stateWord = (clickedState == 0)?"판매종료":"판매시작";
+
+            function noImageHeaderError( obj ){
+                if( obj !=null){
+                    obj.src = "/no_image.jpg"; // 변경하고자하는 이미지를 넣는다.
+                }
+            }
+
+            function SelectRow(obj) {
+                var table = document.getElementById("list-table");
+                var tr = table.getElementsByTagName("tr");
+                
+                clickedId = obj.children[0].innerText;
+                clickedName = obj.children[2].innerText;
+                clickedState = obj.children[8].children.food_state.value;             
+
+                stateWord = (clickedState == 0)?"판매종료":"판매시작";
+                
+                document.getElementById("foodSoldOut").value = stateWord;
+                
+                for(var i=0; i<tr.length; i++){
+                   tr[i].style.backgroundColor = "white";
+                }
+                obj.style.backgroundColor= "#DCD8D8";
+            }
+
+            function onMouseOver(obj) {
+                if(obj.children[0].innerText != clickedId) {
+                    obj.style.backgroundColor = "#E9E7E7";
+                }
+            }
+
+            function onMouseOut(obj) {
+                if(obj.children[0].innerText != clickedId) {
+                    obj.style.backgroundColor = "white";    
+                }
+            }
+
+            function foodUpdate(del) {
+                if(clickedId > 0) {
+                    var actionUrl = "";
+                    var res = false;
+                    var price = 0;
+                    if(del == 2) {
+                        actionUrl = "/food/sold_out";
+                        
+                        var res = confirm("선택하신 " + clickedName + "메뉴를 "+ stateWord +"하시겠습니까?");
+                    }
+                    else if(del == 1) {
+                        actionUrl = "/food/delete";
+                        var res = confirm("선택하신 " + clickedName + "메뉴를 삭제하시겠습니까?");
+                    }
+                    else if(del == 0) {
+                        actionUrl = "/food/update_page";
+                        res = true;
+                    }
+                    if(res) {
+                        var form = document.createElement("form");
+                        form.setAttribute("charset", "UTF-8");
+                        form.setAttribute("method", "Post"); // Get 또는 Post 입력
+                        form.setAttribute("action", actionUrl);
+
+                        var field = document.createElement("input");
+                        field.setAttribute("type", "hidden");
+                        field.setAttribute("name", "food_id");
+                        field.setAttribute("value", clickedId);
+                        form.appendChild(field);
+
+                        var field2 = document.createElement("input");
+                        field2.setAttribute("type", "hidden");
+                        field2.setAttribute("name", "price");
+                        field2.setAttribute("value", price);
+                        form.appendChild(field2);
+
+                        var field3 = document.createElement("input");
+                        field3.setAttribute("type", "hidden");
+                        field3.setAttribute("name", "food_state");
+                        field3.setAttribute("value", clickedState);
+                        form.appendChild(field3);                       
+
+                        document.body.appendChild(form);
+
+                        form.submit();
+                    }
+                }
+                else {
+                    alert("수정할 메뉴를 선택해 주세요.");
+                }
+            }
+
+            function marketUpdate() {
+                var actionUrl = "/food/foodShop";
+                var market_state = document.getElementById("market_state").value;
+                var res = 0;
+                if(market_state == 0) { // 현재 OPEN 상태 이므로
+                    res = confirm("가게 문을 닫겠습니까?");
+                }
+                else {
+                    res = confirm("가게 문을 열겠습니까?");
+                }
+                
+                if(res) {
+                    var form = document.createElement("form");
+                    form.setAttribute("charset", "UTF-8");
+                    form.setAttribute("method", "Post"); // Get 또는 Post 입력
+                    form.setAttribute("action", actionUrl);
+
+                    var field = document.createElement("input");
+                    field.setAttribute("type", "hidden");
+                    field.setAttribute("name", "market_state");
+                    field.setAttribute("value", market_state);
+                    form.appendChild(field);
+
+                    document.body.appendChild(form);
+                    if(market_state == 0) {
+                        alert("가게 문을 닫았습니다. 주문을 할 수 없습니다.");
+                    }
+                    else {
+                        alert("가게 문을 열었습니다. 주문을 할 수 있습니다.");
+                    }
+
+                    form.submit();
+                }
+            }
+
+        </script>
+        <style>
+                .my_thumbnail{
+                    background-color:gray;
+                    margin:10px;
+                    width:60px;
+                    height:60px;
+                    background-size: cover;
+                    background-repeat: no-repeat;
+                    background-position: center center;
+                }
+                .my_thumbnail.round{
+                    border-radius: 10%;
+                }
+                .my_thumbnail.circle{
+                    border-radius: 100%;
+                }
+        </style>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Shuttles Special Menu Management Page</title> 
+    </head>
+    <body>
+        <div class='container'>
+        <h3>Special Menu List</h3>
+        <% 
+            var market_state = ["CLOSE", "OPEN"];
+            var mState = mInfo[0].market_state;
+        %>
+        <input type="hidden" id="market_state" value=<%= mState%>>
+        <input class="btn btn-default pull-right" type="submit"  name="marketUpdate" onclick="marketUpdate()" value=<%= market_state[mState]%>>
+        <br>
+        <h3><%= mInfo[0].market_name %> <span style="color:red"><%= market_state[(mState==0)?1:0] %></span> 상태 입니다</h3>
+        <br>
+        <a href="/food/add" class="btn btn-default pull-left">메뉴 추가</a>
+        <br><br><br>
+        <div class="col-lg-12" id="select_prod" ></div> 
+            <input class="btn btn-default pull-left" type="submit" value="수정" name="foodUpdate" onclick="foodUpdate(0)">
+            <input class="btn btn-default pull-left" type="submit" value="삭제" name="foodelete" onclick="foodUpdate(1)">
+            <input class="btn btn-default pull-left" type="submit" value="판매종료" id="foodSoldOut" name="foodSoldOut" onclick="foodUpdate(2)">
+            <table id="list-table" class="table">
+                <thead>
+                    <tr>
+                        <th>번호</th>
+                        <th>사진</th>
+                        <th>이름</th>
+                        <th>설명</th>                        
+                        <th>가격</th>
+                        <th>마감여부</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <% 
+                    for(var i=0; i<results.length; i++) {
+                        var food_id = results[i].food_id;
+                        var name = results[i].name;
+                        var picture_url = results[i].picture_url;
+                        var description = results[i].description;
+                        var price = results[i].price;
+                        var food_state = results[i].food_state;
+                        %>
+                        <tr id="food_list" onmouseover="javascript:onMouseOver(this)" onmouseout="javascript:onMouseOut(this)" onclick="javascript:SelectRow(this)">
+                            <td><input type='hidden' name='food_id' value=<%= food_id %>><%= food_id %></td>
+                            <td><img class="my_thumbnail round" onError="javascript:noImageHeaderError(this)" src=<%= picture_url %>></td>
+                            <td><%= name %></td> 
+                            <td><%= description %></td>
+                            <td><%= price %></td>
+                            <td><input type='hidden' name='food_state' value=<%= food_state %>><%= food_state %></td>
+                        </tr>
+                <%}%>
+                </tbody>
+            </table>
+        <br>
+        <ul class="pager">
+        <%
+            var curSet = pasing.curSet
+            var endPage = pasing.endPage
+            var startPage = pasing.startPage
+            var totalSet = pasing.totalSet
+            var totalPage = pasing.totalPage
+            var page_list_size = pasing.page_list_size
+            var page_size = pasing.page_size
+            var curPage = pasing.curPage
+        
+            if(curSet > 1){
+        %>
+        
+        <li value=(startPage -1) class="previous">
+        <a href='/food/list?page=<%= ( startPage - 1) %>'>이전페이지</a>
+        </li>
+        
+        <%
+            }
+            for(var i = startPage; i <= endPage; i++){
+                if(i > totalPage){break;}
+                
+                if(i == curPage){
+        %>
+        <li value=<%= i %> class='' >
+        <a href='/food/list?page=<%= i %>'>
+        <%= i %>
+        </a>
+        </li>
+        
+        <%
+                }else{
+        %>
+        
+        <li value=<%= i %> class='active' >
+        <a href='/food/list?page=<%= i %>'>
+        <%= i %>
+        </a>
+        </li>
+           
+        <%
+                }
+            }
+        %>
+        
+        <%
+            if(curSet < totalSet){
+        %>
+        <li value=( endPage + 1) class="next">
+        <a href='/food/list?page=<%= ( endPage + 1) %>'>다음페이지</a>
+        </li>
+        <%
+            }
+        %>
+        
+        </ul>
+                
+        <a href="/logout" class="btn btn-default pull-left">로그아웃</a>
+        </div>
+    </body>
+</html>

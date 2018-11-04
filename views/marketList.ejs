@@ -5,7 +5,8 @@
     </head>
     
     <body>
-        <div id="market_list">
+        <a href="/menu/list" class="market">커피 관리</a>
+        <div id="market_list">   
             <%
                 for(var i=0; i<results.length; i++) {
                     var market_id = results[i].market_id;
@@ -14,18 +15,18 @@
                     if(market_id == 0) continue;  // no show shuttles market              
                     if(i%3==0) {
             %>
-                <a href="/food/list?mId=<%= market_id %>" class="market big green"><%= market_name%> <span><%= user_id %></span></a>
+                <a href="/food/list?mId=<%= market_id %>" class="market blue"><%= market_name%><span><%= user_id %></span></a>
             <%
                     }
                     else if(i%3==1) {
 
             %>
-                <a href="/food/list?mId=<%= market_id %>" class="market big blue"><%= market_name%> <span><%= user_id %></span></a>
+                <a href="/food/list?mId=<%= market_id %>" class="market green"><%= market_name%><span><%= user_id %></span></a>
             <%            
                     }
                     else {
             %>
-                <a href="/food/list?mId=<%= market_id %>" class="market big gray"><%= market_name%> <span><%= user_id %></span></a>        
+                <a href="/food/list?mId=<%= market_id %>" class="market gray"><%= market_name%> <span><%= user_id %></span></a>        
             <%            
                     }
                 }
