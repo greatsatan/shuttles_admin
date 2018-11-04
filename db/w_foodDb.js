@@ -62,7 +62,7 @@ var food_list = function(req, res) {
                 };
                 
                 connection.query("select * from market where market_id = ?", market_id, function(err, marketInfo) {
-                    connection.query("select * from food where market_id=?", market_id, function(err, results) {
+                    connection.query("select * from food where market_id=? order by food_id limit ?,?", [market_id, no, page_size], function(err, results) {
                         res.writeHead('200', {'Content-Type':'text/html;charset=utf8'});
                         var context = {
                             results: results,
