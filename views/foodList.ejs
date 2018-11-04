@@ -161,6 +161,7 @@
         <% 
             var market_state = ["CLOSE", "OPEN"];
             var mState = mInfo[0].market_state;
+            var mId = mInfo[0].market_id;
         %>
         <input type="hidden" id="market_state" value=<%= mState%>>
         <input class="btn btn-default pull-right" type="submit"  name="marketUpdate" onclick="marketUpdate()" value=<%= market_state[mState]%>>
@@ -221,7 +222,7 @@
         %>
         
         <li value=(startPage -1) class="previous">
-        <a href='/food/list?page=<%= ( startPage - 1) %>'>이전페이지</a>
+        <a href='/food/list?mId=<%=mId%>&page=<%= ( startPage - 1) %>'>이전페이지</a>
         </li>
         
         <%
@@ -232,7 +233,7 @@
                 if(i == curPage){
         %>
         <li value=<%= i %> class='' >
-        <a href='/food/list?page=<%= i %>'>
+        <a href='/food/list?mId=<%=mId%>&page=<%= i %>'>
         <%= i %>
         </a>
         </li>
@@ -242,7 +243,7 @@
         %>
         
         <li value=<%= i %> class='active' >
-        <a href='/food/list?page=<%= i %>'>
+        <a href='/food/list?mId=<%=mId%>&page=<%= i %>'>
         <%= i %>
         </a>
         </li>
@@ -256,7 +257,7 @@
             if(curSet < totalSet){
         %>
         <li value=( endPage + 1) class="next">
-        <a href='/food/list?page=<%= ( endPage + 1) %>'>다음페이지</a>
+        <a href='/food/list?mId=<%=mId%>&page=<%= ( endPage + 1) %>'>다음페이지</a>
         </li>
         <%
             }
