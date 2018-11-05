@@ -75,7 +75,7 @@ var notice_list = function(req, res) {
 
                 connection.query("select * from notice order by notice_id limit ?,?", [no, page_size], function(err, results) {
                     res.writeHead('200', {'Content-Type':'text/html;charset=utf8'});
-                    
+                    connection.release();
                     var context = {
                         results: results,
                         pasing: result2
@@ -118,6 +118,7 @@ exports.noticeUpload = function(req, res) {
 
             connection.query("insert into notice values(NULL, ?, ?, ?, NULL)", [subject, content, picture_url], function(err) {
                 if(file) {
+                    connection.release();
                     var menuImg = './uploads/'+filename;
                     jimp.read(menuImg, function(err, img) {
                         img.resize(200, 200).write(menuImg, function(err) {
@@ -168,6 +169,7 @@ exports.noticeUpdate = function(req, res) {
                 connection.query('update notice set notice_subject=?, notice_content=?, notice_picture=?, notice_date=utc_timestamp() where notice_id=?', 
                     [subject, content, picture_url, id],
                 function(err, result) {
+                    connection.release();
                     var menuImg = './uploads/'+filename;
                     jimp.read(menuImg, function(err, img) {
                         img.resize(200, 200).write(menuImg, function(err) {
@@ -194,6 +196,7 @@ exports.noticeUpdate = function(req, res) {
                 connection.query('update notice set notice_subject=?, notice_content=?, notice_date=utc_timestamp() where notice_id=?', 
                     [subject, content, id],
                 function(err, result) {
+                    connection.release();
                     console.log(id+'번 id번호가 수정되었습니다.');
                     
                     notice_list(req, res); 
@@ -209,9 +212,8 @@ exports.noticeUpdate = function(req, res) {
 exports.noticeDelete = function(req, res) {
     pool.getConnection(function(err, connection) {
         var notice_id = req.param('notice_id');
-
-        connection.query('delete from notice where notice_id=?', notice_id,
-            function(err, result) {
+        connection.query('delete from notice where notice_id=?', notice_id, function(err, result) {
+            connection.release();
             console.log(notice_id+'번 id번호가 삭제되었습니다.');
             
             notice_list(req, res);    
@@ -226,6 +228,7 @@ exports.noticeUpdatePage = function(req, res) {
 
         connection.query("select * from notice where notice_id = ?", notice_id, function(err, result) {
             res.writeHead('200', {'Content-Type':'text/html;charset=utf8'});
+            connection.release();
             var context = {result: result};
             var pathLen = imagePath.length;
             var notice_picture = result[0].notice_picture;

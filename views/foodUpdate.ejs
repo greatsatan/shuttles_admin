@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <script type="text/javascript" src="/js/jquery-3.3.1.min.js"></script>
+        <script type="text/javascript" src="/js/bootstrap.min.js"></script>
+        <link type="text/css" rel="stylesheet" href="/css/bootstrap.css">
+        <link type="text/css" rel="stylesheet" href="/css/file.css">
+        <script language='javascript'>
+            function add_item() {
+                var div = document.createElement('div');
+                div.innerHTML = document.getElementById('pre_set').innerHTML;
+                document.getElementById('option').appendChild(div);
+            }
+    
+            function remove_item(obj) {
+                document.getElementById('option').removeChild(obj.parentNode);
+            }    
+
+            function file_change(file) {
+                var str=file.lastIndexOf("\\")+1;	//파일 마지막 "\" 루트의 길이 이후부터 글자를 잘라 파일명만 가져온다.
+                console.log(str);
+                file = file.substring(str, file.length);
+                document.getElementById('fileName').value=file;
+            }
+        </script>
+        
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Shuttles Menu Management Page</title> 
+    </head>
+    <body>
+        <article class="container">
+            <div class="page-header">
+                <div class="col-md-6 col-md-offset-3">
+                    <h3>Shuttles 스페셜 메뉴 수정 페이지</h3>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-offset-3">
+                <form method="post" enctype="multipart/form-data" action="/food/update">
+                    <div class="form-group">
+                        <label for="inputName">메뉴 이름</label>
+                        <input type="text" class="form-control" id="inputName" name="food_name" placeholder="이름을 입력해 주세요" value=<%= result[0].name %>>
+                    </div>
+                    <div class="form-group">
+                        <input type="number" class="form-control" id="inputSize" name="food_price" placeholder="가격을 입력해 주세요(숫자만)" value=<%= result[0].price %>>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputDesc">메뉴 설명</label>
+                        <textarea class="form-control" name="food_description" cols='81' rows='5'><%= result[0].description %></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="inputPicture">사진</label>
+                        <!--<input type="file" id="userfile" name="userfile" value=<%= result[0].picture_url%>>!-->
+
+                        <div class="file_input_div">
+                            <input type="button" value="파일 선택" class="file_input_button"/>
+                            <input type="file" id="userfile" name="userfile" class="file_input_hidden" 
+                            onchange="javascript:file_change(this.value);"/>
+                        </div>
+                        <input id="fileName" class="file_input_textbox" readonly value=<%= result[0].picture_url%>>
+                    </div>
+                    <div class="form-group text-center">
+                        <button type="submit" id="food_submit" class="btn btn-primary">
+                            공지수정<i class="fa fa-check spaceLeft"></i>
+                        </button>
+                        <button type="button" class="btn btn-warning" onclick='history.back()'>
+                            뒤로가기<i class="fa fa-times spaceLeft"></i>
+                        </button>
+                    </div>
+                    <input type="hidden" name="food_id" value=<%= result[0].food_id %>>
+                </form>    
+            </div>
+        </article>
+
+    </body>
+</html>

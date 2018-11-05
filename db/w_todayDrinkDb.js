@@ -59,6 +59,7 @@ var todayDrink_list = function(req, res) {
 
                 connection.query("select * from coffee_list where today_menu=1 order by coffee_id limit ?,?",[no, page_size], function(err, results) {
                     res.writeHead('200', {'Content-Type':'text/html;charset=utf8'});
+                    connection.release();
                     var context = {
                         results: results,
                         pasing: result2
@@ -93,6 +94,7 @@ exports.todayDrinkAdd = function(req, res) {
             }  
             else {          
                 connection.query("update coffee_size set today_price=? where coffee_id=?", [price, id], function(err, result) {
+                    connection.release();
                     todayDrink_list(req, res);  
                 });
             }
@@ -108,6 +110,7 @@ exports.todayDrinkUpdate = function(req, res) {
 
     pool.getConnection(function(err, connection) {        
         connection.query("update coffee_size set today_price=? where coffee_id=?", [price, id], function(err, result) {
+            connection.release();
             todayDrink_list(req, res);  
         });
     });
@@ -117,6 +120,7 @@ exports.todayDrinkDelete = function(req, res) {
     var id = req.param("todayDrink_id");
     pool.getConnection(function(err, connection) {
         connection.query("call today_menu_del(?)", [id], function(err, results) {
+            connection.release();
             todayDrink_list(req, res);
         });
     });

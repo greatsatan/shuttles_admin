@@ -22,7 +22,7 @@
                 
                 clickedId = obj.children[0].innerText;
                 clickedName = obj.children[2].innerText;
-                clickedState = obj.children[8].children.food_state.value;             
+                clickedState = obj.children[5].children.food_state.value;             
 
                 stateWord = (clickedState == 0)?"판매종료":"판매시작";
                 
@@ -168,7 +168,7 @@
         <br>
         <h3><%= mInfo[0].market_name %> <span style="color:red"><%= market_state[(mState==0)?1:0] %></span> 상태 입니다</h3>
         <br>
-        <a href="/food/add" class="btn btn-default pull-left">메뉴 추가</a>
+        <a href="/food/add?mId=<%=mId%>" class="btn btn-default pull-left">메뉴 추가</a>
         <br><br><br>
         <div class="col-lg-12" id="select_prod" ></div> 
             <input class="btn btn-default pull-left" type="submit" value="수정" name="foodUpdate" onclick="foodUpdate(0)">

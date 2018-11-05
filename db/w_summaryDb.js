@@ -81,7 +81,7 @@ exports.summary = function(req, res) {
                         connection.query("select * from orders where date BETWEEN ? AND ? limit ?,?", 
                         [startDate, endDate, no, page_size], function(err, results) {
                             res.writeHead('200', {'Content-Type':'text/html;charset=utf8'});
-                            
+                            connection.release();
                             var context = {
                                 results: results,
                                 pasing: result2,
@@ -146,6 +146,7 @@ exports.summary = function(req, res) {
                         connection.query('select * from orders where user_id=? AND date BETWEEN ? AND ? limit ?,?', 
                             [select_user, startDate, endDate, no, page_size], function(err, results) {
                             res.writeHead('200', {'Content-Type':'text/html;charset=utf8'});
+                            connection.release();
                             var context = {
                                 results: results,
                                 pasing: result2,

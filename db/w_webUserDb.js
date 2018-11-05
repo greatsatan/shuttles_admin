@@ -61,6 +61,7 @@ var web_user_list = function(req, res) {
 
             connection.query("select * from web_user limit ?,?", [no, page_size], function(err, results) {
                 res.writeHead('200', {'Content-Type':'text/html;charset=utf8'});
+                connection.release();
                 var context = {
                     results: results,
                     pasing: result2,
@@ -89,6 +90,7 @@ exports.webUserUpdate = function(req, res) {
 
     pool.getConnection(function(err, connection) {        
         connection.query("update web_user set market_id=? where user_id=?", [auth, id], function(err, result) {
+            connection.release();
             web_user_list(req, res);  
         });
     });
@@ -99,6 +101,7 @@ exports.webUserDelete = function(req, res) {
     console.log(id);
     pool.getConnection(function(err, connection) {
         connection.query("delete from web_user where user_id=?", [id], function(err, results) {
+            connection.release();
             web_user_list(req, res);
         });
     });

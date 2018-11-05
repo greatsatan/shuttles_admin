@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="css/bootstrap.css">
+    <head>
+        <meta charset="UTF-8">
+        <title>Shuttles Special Menu Management Page</title> 
+    </head>
+    <body>
+        <article class="container">
+            <div class="page-header">
+                <div class="col-md-6 col-md-offset-3">
+                    <h3>Shuttles 스페셜 메뉴 추가 페이지</h3>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-offset-3">
+                <form method="post" enctype="multipart/form-data" action="/food/upload">
+                    <div class="form-group">
+                        <label for="inputName">메뉴 이름</label>
+                        <input type="text" class="form-control" id="inputName" name="food_name" placeholder="이름을 입력해 주세요">
+                    </div>
+                    <div class="form-group">
+                        <input type="number" class="form-control" id="inputSize" name="food_price" placeholder="가격을 입력해 주세요(숫자만)">
+                    </div>
+                    <div class="form-group">
+                        <label for="inputDesc">메뉴 설명</label>
+                        <textarea class="form-control" name="food_description" cols='81' rows='5'></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputPicture">사진</label>
+                        <input type="file" name="userfile">
+                    </div>
+                    <div class="form-group text-center">
+                        <button type="submit" id="food_submit" class="btn btn-primary">
+                            메뉴추가<i class="fa fa-check spaceLeft"></i>
+                        </button>
+                        <button type="button" class="btn btn-warning" onclick='history.back()'>
+                            뒤로가기<i class="fa fa-times spaceLeft"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </article>
+    </body>
+</html>

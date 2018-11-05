@@ -21,7 +21,7 @@ exports.login = function(req, res) {
                 connection.query("select * from market where user_id=?", userId, function(err, marketInfo) {
                     var market_id = marketInfo[0].market_id;
                     console.log(userId + "님이 로그인 하였습니다.");
-    
+                    connection.release();
                     if(req.session.user) {
                         // 이미 로그인 되어있는 상태
                     }

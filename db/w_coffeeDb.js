@@ -86,6 +86,8 @@ var coffee_list = function(req, res) {
                 connection.query("select market_state from market where market_id = 0", function(err, state) {
                     connection.query("select * from coffee_list order by coffee_id limit ?,?", [no, page_size], function(err, results) {
                         res.writeHead('200', {'Content-Type':'text/html;charset=utf8'});
+
+                        connection.release();
             
                         var context = {
                             results: results,
@@ -149,7 +151,9 @@ exports.coffeeUpload = function(req, res) {
                 connection.query("insert into coffee_state values(NULL, ?, ?)", [kind, insertId]);
                 for(var idx=0; idx<option_length;idx++) {
                     connection.query("insert into coffee_option values(NULL, ?, ?, ?)", [option_name[idx], option_price[idx], insertId], function(err, result) {
-                    
+                        if(idx == option_length-1) {
+                            connection.release();
+                        }
                         var menuImg = './uploads/'+filename;
                         jimp.read(menuImg, function(err, img) {
                             img.resize(200, 200).write(menuImg, function(err) {
@@ -254,6 +258,7 @@ exports.coffeeUpdate = function(req, res) {
                         [id, name,  picture_url, description, ver, coffee_size, price, kind],
                     function(err, result) {
                         console.log(id+'번 id번호가 수정되었습니다.');
+                        connection.release();
     
                         var menuImg = './uploads/'+filename;
                         jimp.read(menuImg, function(err, img) {
@@ -286,6 +291,7 @@ exports.coffeeUpdate = function(req, res) {
                 connection.query('call coffee_update2(?, ?, ?, ?, ?, ?)', 
                     [id, name, description, coffee_size, price, kind],
                 function(err, result) {
+                    connection.release();
                     console.log(id+'번 id번호가 수정되었습니다.');
                     coffee_list(req, res); 
                 });
@@ -301,8 +307,8 @@ exports.coffeeUpdate = function(req, res) {
 exports.coffeeDelete = function(req, res) {
     var id = req.param('coffee_id');
     pool.getConnection(function(err, connection) {
-        connection.query('delete from coffee where coffee_id=?', id,
-            function(err, result) {
+        connection.query('delete from coffee where coffee_id=?', id, function(err, result) {
+            connection.release();
             console.log(id+'번 id번호가 삭제되었습니다.');
             
             coffee_list(req, res);     
@@ -317,6 +323,7 @@ exports.coffeeUpdatePage = function(req, res) {
     pool.getConnection(function(err, connection) {
         connection.query("select * from coffee_update_list where coffee_id = ?", coffee_id, function(err, result) {
             res.writeHead('200', {'Content-Type':'text/html;charset=utf8'});
+            connection.release();
             var context = {result: result};
             var pathLen = imagePath.length;
             var picture_url = result[0].picture_url;
@@ -341,9 +348,9 @@ exports.coffeeSoldOut = function(req, res) {
     var bState = (state == 0)?true:false;
 
     pool.getConnection(function(err, connection) {
-        connection.query('update coffee set coffee_state=? where coffee_id=?', [bState, id],
-            function(err, result) {
-            console.log(id+'번 판매 종료되었습니다.');
+        connection.query('update coffee set coffee_state=? where coffee_id=?', [bState, id], function(err, result) {
+            connection.release();    
+            console.log(id+'번 판매상태 변경되었습니다.');
             
             coffee_list(req, res);     
         });
@@ -355,9 +362,8 @@ exports.coffeeShop = function(req, res) {
     state = (state==0)?1:0;
     
     pool.getConnection(function(err, connection) {
-        connection.query('update market set market_state=? where market_id=0', [state],
-            function(err, result) {
-            
+        connection.query('update market set market_state=? where market_id=0', [state], function(err, result) {
+            connection.release();
             coffee_list(req, res);     
         });
     });

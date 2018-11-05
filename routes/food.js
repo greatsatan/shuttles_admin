@@ -1,10 +1,20 @@
 var express = require('express');
 var db = require('../db/w_foodDb');
 var router = express.Router();
+var upload = require('./upload');
 
-router.post('/update', function(req, res) {
+router.post('/upload', upload.single('userfile'), function(req, res) {
     if(req.session.user) {
-        db.foodList(req, res);
+        db.foodUpload(req, res);
+    }
+    else {
+        res.redirect('/login.html');
+    }
+});
+
+router.post('/update', upload.single('userfile'), function(req, res) {
+    if(req.session.user) {
+        db.foodUpdate(req, res);
     }
     else {
         res.redirect('/login.html');
@@ -13,7 +23,7 @@ router.post('/update', function(req, res) {
 
 router.post('/delete', function(req, res) {
     if(req.session.user) {
-        db.foodList(req, res);
+        db.foodDelete(req, res);
     }
     else {
         res.redirect('/login.html');
@@ -22,7 +32,7 @@ router.post('/delete', function(req, res) {
 
 router.post('/update_page', function(req, res) {
     if(req.session.user) {
-        db.foodList(req, res);
+        db.foodUpdatePage(req, res);
     }
     else {
         res.redirect('/login.html');
@@ -31,7 +41,7 @@ router.post('/update_page', function(req, res) {
 
 router.post('/sold_out', function(req, res) {
     if(req.session.user) {
-        db.foodList(req, res);
+        db.foodSoldout(req, res);
     }
     else {
         res.redirect('/login.html');
@@ -40,7 +50,7 @@ router.post('/sold_out', function(req, res) {
 
 router.post('/foodShop', function(req, res) {
     if(req.session.user) {
-        db.foodList(req, res);
+        db.foodShop(req, res);
     }
     else {
         res.redirect('/login.html');
@@ -49,7 +59,7 @@ router.post('/foodShop', function(req, res) {
 
 router.get('/add', function(req, res) {
     if(req.session.user) {
-        db.foodList(req, res);
+        res.redirect('/foodAdd.html');
     }
     else {
         res.redirect('/login.html');
