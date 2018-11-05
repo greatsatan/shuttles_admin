@@ -6,16 +6,6 @@
         <link type="text/css" rel="stylesheet" href="/css/bootstrap.css">
         <link type="text/css" rel="stylesheet" href="/css/file.css">
         <script language='javascript'>
-            function add_item() {
-                var div = document.createElement('div');
-                div.innerHTML = document.getElementById('pre_set').innerHTML;
-                document.getElementById('option').appendChild(div);
-            }
-    
-            function remove_item(obj) {
-                document.getElementById('option').removeChild(obj.parentNode);
-            }    
-
             function file_change(file) {
                 var str=file.lastIndexOf("\\")+1;	//파일 마지막 "\" 루트의 길이 이후부터 글자를 잘라 파일명만 가져온다.
                 console.log(str);

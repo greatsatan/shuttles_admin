@@ -20,6 +20,7 @@ router.post('/add', function(req, res) {
 });
 
 router.post('/update', function(req, res) {
+    console.log("ZZ2");
     if(req.session.user) {
         db.todayDrinkUpdate(req, res);
     }
@@ -29,6 +30,7 @@ router.post('/update', function(req, res) {
 });    
 
 router.post('/delete', function(req, res) {
+    console.log("ZZ");
     if(req.session.user) {
         db.todayDrinkDelete(req, res);
     }

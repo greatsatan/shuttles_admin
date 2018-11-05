@@ -118,6 +118,7 @@ exports.todayDrinkUpdate = function(req, res) {
 
 exports.todayDrinkDelete = function(req, res) {
     var id = req.param("todayDrink_id");
+    console.log(id);
     pool.getConnection(function(err, connection) {
         connection.query("call today_menu_del(?)", [id], function(err, results) {
             connection.release();
