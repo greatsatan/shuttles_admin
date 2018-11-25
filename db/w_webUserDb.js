@@ -82,16 +82,45 @@ exports.webUserList = function(req, res) {
     web_user_list(req, res);
 }
 
-exports.webUserUpdate = function(req, res) {
-    var id = req.param('user_id');
-    var auth = parseInt(req.param('auth'));
-
-    console.log(id + " / " + auth);
+exports.webUserUpdateList = function(req, res) {
+    var user_id = req.param('user_id');
 
     pool.getConnection(function(err, connection) {        
-        connection.query("update web_user set market_id=? where user_id=?", [auth, id], function(err, result) {
+        connection.query("select * from market where user_id is NULL", function(err, result) {
             connection.release();
-            web_user_list(req, res);  
+
+            var context = {
+                results: result,
+                u_id : user_id
+            };
+
+            req.app.render('webUserUpdate', context, function(err, html) {
+                if(err) {throw err};
+                res.end(html);
+            });
+
+        });
+    });
+}
+
+exports.webUserUpdate = function(req, res) {
+    var user_id = req.param('user_id');
+    var market_id = req.param('market_id');
+    var market_name = req.param('market_name');
+
+    console.log(user_id + " / " + market_id+ " / " + market_name);
+
+    pool.getConnection(function(err, connection) {        
+        connection.query("update web_user set market_id=?, market_name=? where user_id=?", [market_id, market_name, user_id], function(err, result) {
+            connection.query("update market set user_id=? where market_id=?", [user_id, market_id], function(err, result2) {
+                if(err) {
+                    console.log(err);
+                }
+                else {
+                    connection.release();
+                    web_user_list(req, res);  
+                }
+            });
         });
     });
 }

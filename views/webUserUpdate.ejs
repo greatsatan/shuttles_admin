@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+    <script src="/js/jquery-3.3.1.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="/css/bootstrap.css">
+    <script type='text/javascript'>
+        var clickedId = -1;
+        var clickedName = "";
+
+        function SelectRow(obj) {
+            var table = document.getElementById("list-table");
+            var tr = table.getElementsByTagName("tr");
+
+            clickedId = obj.children[0].innerText;
+            clickedName = obj.children[1].innerText;
+            
+            for(var i=0; i<tr.length; i++){
+                tr[i].style.backgroundColor = "white";
+            }
+            obj.style.backgroundColor= "#DCD8D8";
+        }
+
+        function onMouseOver(obj) {
+            if(obj.children[0].innerText != clickedId) {
+                obj.style.backgroundColor = "#E9E7E7";
+            }
+        }
+
+        function onMouseOut(obj) {
+            if(obj.children[0].innerText != clickedId) {
+                obj.style.backgroundColor = "white";    
+            }
+        }        
+
+        function webUserUpdate() {
+            if(clickedId > 0) {
+                var user_id = document.getElementById("user_id").value;
+                var actionUrl = "";
+                var res = true;
+                actionUrl = "/webUser/update";
+                res = confirm(user_id +"의 관리 가게를 " + clickedName + "로 수정 하시겠습니까?");
+
+                if(res) {
+                    var form = document.createElement("form");
+                    form.setAttribute("charset", "UTF-8");
+                    form.setAttribute("method", "Post"); // Get 또는 Post 입력
+                    form.setAttribute("action", actionUrl);
+
+                    var field = document.createElement("input");
+                    field.setAttribute("type", "hidden");
+                    field.setAttribute("name", "market_id");
+                    field.setAttribute("value", clickedId);
+                    form.appendChild(field);
+
+                    var field2 = document.createElement("input");
+                    field2.setAttribute("type", "hidden");
+                    field2.setAttribute("name", "market_name");
+                    field2.setAttribute("value", clickedName);
+                    form.appendChild(field2);
+
+                    var field3 = document.createElement("input");
+                    field3.setAttribute("type", "hidden");
+                    field3.setAttribute("name", "user_id");
+                    field3.setAttribute("value", user_id);
+                    form.appendChild(field3);
+
+                    document.body.appendChild(form);
+
+                    form.submit();
+                }
+            }
+            else {
+                alert("수정 혹은 삭제하실 메뉴를 선택해 주세요.");
+            }
+        }
+
+    </script>
+    <head>
+        <meta charset="UTF-8">
+        <title>Shuttles Web User Update Page</title> 
+    </head>
+    <body>
+        <article class="container">
+            <div class="page-header">
+                <div class="col-md-6 col-md-offset-3">
+                    <h3>Shuttles 웹 유저 권한 수정 페이지</h3>
+                </div>
+            </div>
+            <table id="list-table" class="table">
+                <thead>
+                    <tr>
+                        <th>번호</th>
+                        <th>가게 이름</th>
+                        <th>전화번호</th>
+                        <th>주소</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% for(var i=0; i<results.length; i++) {
+                        var market_id = results[i].market_id;
+                        var market_name = results[i].market_name;
+                        var market_number = results[i].market_number;
+                        var market_addr = results[i].market_address;
+                        %>
+                        <tr id="user_list" onmouseover="javascript:onMouseOver(this)" onmouseout="javascript:onMouseOut(this)" onclick="javascript:SelectRow(this)">
+                            <td><%= market_id %></td> 
+                            <td><%= market_name %></td> 
+                            <td><%= market_number %></td>
+                            <td><%= market_addr %></td>
+                        </tr>
+                    <%}%>
+                </tbody>
+            </table>
+            <input type="hidden" id="user_id" name="user_id" value=<%= u_id %>>
+            <div class="col-sm-6 col-md-offset-3">
+                <div class="form-group text-center">
+                    <button type="submit" id="web_submit" class="btn btn-primary" onclick="javascript:webUserUpdate()">
+                        마켓수정<i class="fa fa-check spaceLeft"></i>
+                    </button>
+                    <button type="button" class="btn btn-warning" onclick='history.back()'>
+                        뒤로가기<i class="fa fa-times spaceLeft"></i>
+                    </button>
+                </div>
+            </div>
+        </article>
+    </body>
+</html>
